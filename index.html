@@ -532,8 +532,11 @@ function closeModal() {
   });
 </script>
 <!-- Firebase SDKs -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyAVtmSFXGMgEO97QwBJFcFip1fXqotFzFI",
@@ -545,7 +548,6 @@ function closeModal() {
     measurementId: "G-FJVMZQFBQ2",
     databaseURL: "https://whatsapp-ed801-default-rtdb.asia-southeast1.firebasedatabase.app/"
   };
-
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
