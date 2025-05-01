@@ -259,26 +259,22 @@
 
 </div>
 
-<script>
-  function openYouTube() {
-    document.getElementById("youtubeModal").style.display = "flex";
-  }
+  <script>
+ function openYouTube() { 
+  document.getElementById("youtubeModal").style.display = "flex"; 
+  // Pasang langsung video default
+  const videoId = "dQw4w9WgXcQ"; // Ganti ID video YouTube sesuai kebutuhan
+  const iframeUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  document.getElementById("youtubePlayer").src = iframeUrl;
+  document.getElementById("youtubePlayer").style.display = "block";
+}
 
-  function closeModal() {
-    document.getElementById("youtubeModal").style.display = "none";
-  }
-
-  function searchYouTube() {
-    const query = document.getElementById("youtubeSearch").value;
-    if (query.trim() === "") {
-      alert("Masukkan kata kunci pencarian!");
-      return;
-    }
-    const searchUrl = "https://m.youtube.com/results?search_query=" + encodeURIComponent(query);
-    window.open(searchUrl, "_blank");
-    closeModal();
-  }
-</script>     
+function closeModal() { 
+  document.getElementById("youtubeModal").style.display = "none"; 
+  document.getElementById("youtubePlayer").style.display = "none";
+  document.getElementById("youtubePlayer").src = ""; // berhentiin video
+}
+  </script>
 
 
 <script>
