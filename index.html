@@ -319,7 +319,7 @@
 <p id="pesan"></p>
 
 
-
+<script>
   function buatAkun() {
     const username = document.getElementById('usernameInput').value.trim();
     const pesanEl = document.getElementById('pesan');
@@ -354,49 +354,7 @@
  
 
   
-  <script>
-  const registerDiv = document.getElementById('register');
-
-  window.onload = () => {
-    if (firebase.auth().currentUser) {
-      registerDiv.style.display = 'none';
-      chatDiv.style.display = 'flex';
-      chatName.innerText = firebase.auth().currentUser.phoneNumber;
-    } else {
-      registerDiv.style.display = 'flex';
-      chatDiv.style.display = 'none';
-    }
-  };
-
-  function sendOTP() {
-    const phoneNumber = document.getElementById('phoneNumber').value;
-    const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
-    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then(confirmationResult => {
-        window.confirmationResult = confirmationResult;
-        document.getElementById('otpSection').style.display = 'block';
-        alert('OTP dikirim!');
-      })
-      .catch(error => {
-        alert('Gagal kirim OTP: ' + error.message);
-      });
-  }
-
-  function verifyOTP() {
-    const otp = document.getElementById('otpInput').value;
-    confirmationResult.confirm(otp)
-      .then(result => {
-        const user = result.user;
-        alert('Verifikasi sukses! Selamat datang ' + user.phoneNumber);
-        registerDiv.style.display = 'none';
-        chatDiv.style.display = 'flex';
-        chatName.innerText = user.phoneNumber;
-      })
-      .catch(error => {
-        alert('Kode OTP salah: ' + error.message);
-      });
-  }
-</script>
+ 
   
   <script>
  function openYouTube() { 
@@ -546,6 +504,7 @@ function closeModal() {
     }
   });
 </script>
+
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
