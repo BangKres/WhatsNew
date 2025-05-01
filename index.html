@@ -234,6 +234,10 @@
 </head>
 <body>
   
+  <input type="text" id="usernameInput" placeholder="Masukkan Nama Kamu">
+<button id="registerBtn">Buat Akun</button>
+<p id="message"></p>
+  
 <div id="chat">
   <!-- Kode HTML lu tetep sama -->
   <div id="toolbar" class="toolbar hidden">
@@ -311,42 +315,53 @@
   </div>
   
   
-<input type="text" id="usernameInput" placeholder="Masukkan Nama Kamu">
-<button id="registerBtn">Buat Akun</button>
-<p id="message"></p>
+
   
 
 
 
 <script>
   // Pastikan firebase sudah di-initialize (kode yang kamu kasih tadi)
-  const db = firebase.database();
+  // Firebase Database
+const db = firebase.database();
 
-  document.getElementById('registerBtn').addEventListener('click', function() {
+// Event listener untuk tombol buat akun
+document.getElementById('registerBtn').addEventListener('click', function() {
     const username = document.getElementById('usernameInput').value.trim();
 
+    // Validasi nama pengguna kosong
     if (username === "") {
-      document.getElementById('message').innerText = "Nama tidak boleh kosong!";
-      return;
+        document.getElementById('message').innerText = "Nama tidak boleh kosong!";
+        return;
     }
 
+    // Mengecek apakah nama sudah ada di Firebase
     const usernameRef = db.ref('users/' + username);
-
     usernameRef.once('value').then((snapshot) => {
-      if (snapshot.exists()) {
-        document.getElementById('message').innerText = "Nama sudah ada, coba nama lain.";
-      } else {
-        usernameRef.set({ username: username })
-          .then(() => {
-            document.getElementById('message').innerText = "Akun berhasil dibuat!";
-          })
-          .catch((error) => {
-            console.error(error);
-            document.getElementById('message').innerText = "Terjadi kesalahan saat membuat akun.";
-          });
-      }
+        if (snapshot.exists()) {
+            // Jika nama sudah ada, tampilkan pesan kesalahan
+            document.getElementById('message').innerText = "Nama sudah ada, coba nama lain.";
+        } else {
+            // Jika nama belum ada, buat akun dan simpan di Firebase
+            usernameRef.set({ username: username })
+                .then(() => {
+                    // Setelah akun berhasil dibuat, simpan username di localStorage dan tampilkan pesan sukses
+                    localStorage.setItem('chatUser', username);
+                    document.getElementById('message').innerText = "Akun berhasil dibuat!";
+                    // Pindahkan ke halaman chat
+                    location.reload();
+                })
+                .catch((error) => {
+                    // Tangani jika ada error saat membuat akun
+                    console.error(error);
+                    document.getElementById('message').innerText = "Terjadi kesalahan saat membuat akun.";
+                });
+        }
+    }).catch((error) => {
+        console.error("Error checking username:", error);
+        document.getElementById('message').innerText = "Terjadi kesalahan saat memeriksa nama.";
     });
-  });
+});
 </script>
   
   
