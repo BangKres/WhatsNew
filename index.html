@@ -319,31 +319,34 @@
 
 
 <script>
-  function buatAkun() {
+  // Pastikan firebase sudah di-initialize (kode yang kamu kasih tadi)
+  const db = firebase.database();
+
+  document.getElementById('registerBtn').addEventListener('click', function() {
     const username = document.getElementById('usernameInput').value.trim();
-    const pesanEl = document.getElementById('pesan');
 
     if (username === "") {
-      pesanEl.textContent = "Nama tidak boleh kosong!";
+      document.getElementById('message').innerText = "Nama tidak boleh kosong!";
       return;
     }
 
-    const userRef = firebase.database().ref('users/' + username);
+    const usernameRef = db.ref('users/' + username);
 
-    userRef.once('value').then((snapshot) => {
+    usernameRef.once('value').then((snapshot) => {
       if (snapshot.exists()) {
-        pesanEl.textContent = "Nama sudah ada, coba nama lain.";
+        document.getElementById('message').innerText = "Nama sudah ada, coba nama lain.";
       } else {
-        userRef.set({
-          dibuat: new Date().toISOString()
-        }).then(() => {
-          pesanEl.textContent = "Akun berhasil dibuat dengan nama: " + username;
-          // kalau mau pindah halaman:
-          // window.location.href = "halaman_lain.html";
-        });
+        usernameRef.set({ username: username })
+          .then(() => {
+            document.getElementById('message').innerText = "Akun berhasil dibuat!";
+          })
+          .catch((error) => {
+            console.error(error);
+            document.getElementById('message').innerText = "Terjadi kesalahan saat membuat akun.";
+          });
       }
     });
-  }
+  });
 </script>
   
   
