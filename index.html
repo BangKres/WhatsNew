@@ -289,7 +289,17 @@
   </div>
   
   
-  
+  <div id="register">
+  <h2>Buat Akun</h2>
+  <input type="text" id="phoneNumber" placeholder="Nomor HP (+62xxx)" style="padding:10px; border-radius:5px; width:200px;">
+  <div id="recaptcha-container"></div>
+  <button onclick="sendOTP()" style="margin-top:10px;">Kirim OTP</button>
+
+  <div id="otpSection">
+    <input type="text" id="otpInput" placeholder="Kode OTP" style="margin-top:10px; padding:10px; border-radius:5px; width:200px;">
+    <button onclick="verifyOTP()" style="margin-top:10px;">Verifikasi</button>
+  </div>
+</div>
   
   <script>
   const registerDiv = document.getElementById('register');
