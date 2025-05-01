@@ -311,32 +311,47 @@
   </div>
   
   
-  <div id="register">
-  <h2>Buat Akun</h2>
-  <input type="text" id="phoneNumber" placeholder="Nomor HP (+62xxx)" style="padding:10px; border-radius:5px; width:200px;">
-  <div id="recaptcha-container"></div>
-  <button onclick="sendOTP()" style="margin-top:10px;">Kirim OTP</button>
-
-  <div id="otpSection">
-    <input type="text" id="otpInput" placeholder="Kode OTP" style="margin-top:10px; padding:10px; border-radius:5px; width:200px;">
-    <button onclick="verifyOTP()" style="margin-top:10px;">Verifikasi</button>
-  </div>
-</div>
   
-  <!-- Tambahkan ini di <head> sebelum </head> -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "API_KEY_KAMU",
-    authDomain: "PROJECT_ID.firebaseapp.com",
-    projectId: "PROJECT_ID",
-    storageBucket: "PROJECT_ID.appspot.com",
-    messagingSenderId: "SENDER_ID",
-    appId: "APP_ID"
-  };
-  firebase.initializeApp(firebaseConfig);
+  
+  <h2>Buat Akun</h2>
+<input type="text" id="usernameInput" placeholder="Masukkan Nama">
+<button onclick="buatAkun()">Buat Akun</button>
+<p id="pesan"></p>
+
+
+
+  function buatAkun() {
+    const username = document.getElementById('usernameInput').value.trim();
+    const pesanEl = document.getElementById('pesan');
+
+    if (username === "") {
+      pesanEl.textContent = "Nama tidak boleh kosong!";
+      return;
+    }
+
+    const userRef = firebase.database().ref('users/' + username);
+
+    userRef.once('value').then((snapshot) => {
+      if (snapshot.exists()) {
+        pesanEl.textContent = "Nama sudah ada, coba nama lain.";
+      } else {
+        userRef.set({
+          dibuat: new Date().toISOString()
+        }).then(() => {
+          pesanEl.textContent = "Akun berhasil dibuat dengan nama: " + username;
+          // kalau mau pindah halaman:
+          // window.location.href = "halaman_lain.html";
+        });
+      }
+    });
+  }
 </script>
+  
+  
+  
+  
+  
+ 
 
   
   <script>
