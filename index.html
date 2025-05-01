@@ -257,8 +257,17 @@
 
 
 
-</div>
-
+<div id="youtubeModal" class="modal">
+    <div class="modal-content">
+      <h2>Cari Video YouTube</h2>
+      <input type="text" id="youtubeSearch" placeholder="Ketik judul video...">
+      <br><br>
+      <button onclick="searchYouTube()">Cari</button>
+      <p>Hasil akan dibuka di tab baru.</p>
+      <div class="close" onclick="closeModal()">&times;</div>
+      <iframe id="youtubePlayer" style="display:none;" src="" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+    </div>
+  </div>
   <script>
  function openYouTube() { 
   document.getElementById("youtubeModal").style.display = "flex"; 
