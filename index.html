@@ -205,6 +205,20 @@
       border:
       none;
       }
+      #register { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      height: 100vh; 
+      width: 100%; 
+      }
+      #otpSection { 
+      display:
+      none; 
+        
+      }
+      
   </style>
 
   
@@ -300,6 +314,22 @@
     <button onclick="verifyOTP()" style="margin-top:10px;">Verifikasi</button>
   </div>
 </div>
+  
+  <!-- Tambahkan ini di <head> sebelum </head> -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "API_KEY_KAMU",
+    authDomain: "PROJECT_ID.firebaseapp.com",
+    projectId: "PROJECT_ID",
+    storageBucket: "PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
   
   <script>
   const registerDiv = document.getElementById('register');
