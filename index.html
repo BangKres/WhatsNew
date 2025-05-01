@@ -234,9 +234,67 @@
 </head>
 <body>
   
-  <input type="text" id="usernameInput" placeholder="Masukkan Nama Kamu">
 
+<!-- Input -->
+<div id="form">
+  <input type="text" id="usernameInput" placeholder="Masukkan Nama Kamu">
   <button onclick="createAccount()">Buat Akun</button>
+</div>
+
+<!-- Chat Div -->
+<div id="chat" style="display: none;">
+  <h2>Halo <span id="userName"></span>, Selamat datang di Chat!</h2>
+  <!-- Konten chat bisa ditambah di sini -->
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  // Konfigurasi Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVtmSFXGMgEO97QwBJFcFip1fXqotFzFI",
+    authDomain: "whatsapp-ed801.firebaseapp.com",
+    projectId: "whatsapp-ed801",
+    storageBucket: "whatsapp-ed801.appspot.com",
+    messagingSenderId: "263371978522",
+    appId: "1:263371978522:web:679a5a4ca13c9b5fe4dea3",
+    measurementId: "G-FJVMZQFBQ2",
+    databaseURL: "https://whatsapp-ed801-default-rtdb.asia-southeast1.firebasedatabase.app/"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  function createAccount() {
+    const username = document.getElementById("usernameInput").value.trim();
+
+    if (username === "") {
+      alert("Nama tidak boleh kosong!");
+      return;
+    }
+
+    // Simpan ke Firebase
+    db.ref("users/" + username).set({
+      name: username
+    }, function(error) {
+      if (error) {
+        alert("Gagal menyimpan: " + error.message);
+      } else {
+        // Sembunyikan form, tampilkan chat
+        document.getElementById("form").style.display = "none";
+        document.getElementById("chat").style.display = "block";
+        document.getElementById("userName").textContent = username;
+      }
+    });
+  }
+</script>
+  
+  
+  
+  
   
   
 <div id="chat">
