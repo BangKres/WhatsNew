@@ -58,28 +58,27 @@
     }
 
     .filters {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-right: 10px; /* Tambahan ini penting */
-}
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
 
     .filters::-webkit-scrollbar {
       display: none;
     }
 
     .filter-btn {
-  padding: 6px 14px;
-  border-radius: 20px;
-  background-color: #2a2a2a;
-  color: #ccc;
-  font-size: 14px;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  transition: 0.3s;
-  flex-shrink: 0; /* Supaya tidak menyusut */
-}
+      padding: 6px 14px;
+      border-radius: 20px;
+      background-color: #2a2a2a;
+      color: #ccc;
+      font-size: 14px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      transition: 0.3s;
+      flex-shrink: 0;
+    }
 
     .filter-btn.active {
       background-color: var(--accent);
