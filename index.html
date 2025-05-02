@@ -177,7 +177,8 @@
 
       if (name === storedUsername && password === storedPassword) {
         alert("Login berhasil!");
-        // Nanti redirect ke halaman menu/chat
+        // Setelah login berhasil, arahkan ke halaman menu.html
+        window.location.href = 'menu.html'; // Ganti dengan path yang sesuai jika perlu
       } else {
         alert("Nama atau password salah!");
       }

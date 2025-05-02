@@ -23,15 +23,15 @@ if ! git remote get-url origin >/dev/null 2>&1; then
 fi
 
 # Pastikan file yang dipantau ada
-if [ ! -f index.html ] || [ ! -f login.html ]; then
-    echo "File index.html atau login.html tidak ditemukan!"
+if [ ! -f index.html ] || [ ! -f menu.html ]; then
+    echo "File index.html atau menu.html tidak ditemukan!"
     exit 1
 fi
 
-echo "Memantau perubahan index.html dan login.html..."
+echo "Memantau perubahan index.html dan menu.html..."
 
 # Loop pantau perubahan
-while inotifywait -e modify index.html login.html; do
+while inotifywait -e modify index.html menu.html; do
     echo "Perubahan terdeteksi. Menyiapkan upload ke GitHub..."
 
     git add .
