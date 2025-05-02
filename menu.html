@@ -381,19 +381,23 @@
   `;
 
   setTimeout(() => {
-    document.getElementById('imageInput').addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('profileImg').src = e.target.result;
-          localStorage.setItem('profileImage', e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  }, 100);
-});
+  document.getElementById('imageInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('profileImg').src = e.target.result;
+        localStorage.setItem('profileImage', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Event Tombol Simpan
+  document.querySelector('.btn').addEventListener('click', function () {
+    simpanDataKeFirebase(); // panggil fungsi simpan
+  });
+}, 100);
 
     function kembaliKeBeranda() {
       clickSound.currentTime = 0;
