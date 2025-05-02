@@ -87,6 +87,22 @@
       cursor: pointer;
     }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWs21ruR4Tbu8Xspr1_0t9G4-bXKIrSHU",
+      authDomain: "projectbesar-4f8ce.firebaseapp.com",
+      projectId: "projectbesar-4f8ce",
+      storageBucket: "projectbesar-4f8ce.firebasestorage.app",
+      messagingSenderId: "780129512462",
+      appId: "1:780129512462:web:5c7ea2c54aa777e127a05f",
+      measurementId: "G-JL3VVKSD4F"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
 
@@ -96,7 +112,7 @@
       
       <!-- Form untuk login -->
       <div id="login-form">
-        <input type="text" id="username" placeholder="Masukkan Nama Kamu" required>
+        <input type="text" id="username" placeholder="Masukkan Email Kamu" required>
         <div class="password-container">
           <input type="password" id="password" placeholder="Masukkan Password Kamu" required>
           <svg class="lock-icon" onclick="togglePassword()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -109,7 +125,7 @@
       
       <!-- Form untuk registrasi -->
       <div id="register-form" style="display: none;">
-        <input type="text" id="new-username" placeholder="Nama Pengguna" required>
+        <input type="text" id="new-username" placeholder="Email Kamu" required>
         <input type="password" id="new-password" placeholder="Password" required>
         <input type="password" id="confirm-password" placeholder="Konfirmasi Password" required>
         <button onclick="register()">Daftar</button>
@@ -123,11 +139,7 @@
   <script>
     function togglePassword() {
       const passwordField = document.getElementById("password");
-      if (passwordField.type === "password") {
-        passwordField.type = "text"; // Tampilkan password
-      } else {
-        passwordField.type = "password"; // Sembunyikan password
-      }
+      passwordField.type = passwordField.type === "password" ? "text" : "password";
     }
 
     function showRegisterForm() {
@@ -143,45 +155,46 @@
     }
 
     function register() {
-      const newUsername = document.getElementById("new-username").value.trim();
-      const newPassword = document.getElementById("new-password").value.trim();
+      const email = document.getElementById("new-username").value.trim();
+      const password = document.getElementById("new-password").value.trim();
       const confirmPassword = document.getElementById("confirm-password").value.trim();
 
-      if (!newUsername || !newPassword || !confirmPassword) {
+      if (!email || !password || !confirmPassword) {
         alert("Semua field wajib diisi!");
         return;
       }
-      if (newPassword !== confirmPassword) {
+      if (password !== confirmPassword) {
         alert("Password dan konfirmasi password tidak cocok!");
         return;
       }
-      
-      // Simulasi pendaftaran
-      localStorage.setItem("userName", newUsername);
-      localStorage.setItem("userPassword", newPassword);
-      alert("Akun berhasil dibuat!");
-      showLoginForm(); // Berpindah ke halaman login
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("Akun berhasil dibuat!");
+          showLoginForm();
+        })
+        .catch((error) => {
+          alert("Gagal daftar: " + error.message);
+        });
     }
 
     function login() {
-      const name = document.getElementById("username").value.trim();
+      const email = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      if (!name || !password) {
-        alert("Nama dan Password wajib diisi!");
+      if (!email || !password) {
+        alert("Email dan Password wajib diisi!");
         return;
       }
 
-      const storedUsername = localStorage.getItem("userName");
-      const storedPassword = localStorage.getItem("userPassword");
-
-      if (name === storedUsername && password === storedPassword) {
-        alert("Login berhasil!");
-        // Setelah login berhasil, arahkan ke halaman menu.html
-        window.location.href = 'menu.html'; // Ganti dengan path yang sesuai jika perlu
-      } else {
-        alert("Nama atau password salah!");
-      }
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("Login berhasil!");
+          window.location.href = 'menu.html';
+        })
+        .catch((error) => {
+          alert("Gagal login: " + error.message);
+        });
     }
   </script>
 
