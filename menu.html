@@ -312,8 +312,11 @@
   const savedImage = localStorage.getItem('profileImage') || 'https://via.placeholder.com/120';
 
   document.getElementById('mainContent').innerHTML = `
-  
-    <div style="padding: 20px; text-align: center; background: #000;">
+    <!-- Background full layar -->
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: -1;"></div>
+
+    <!-- Konten di atas background -->
+    <div style="padding: 20px; text-align: center; position: relative; z-index: 1;">
       <div style="position: relative; display: inline-block; margin-bottom: 20px;">
         <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
         <input type="file" id="imageInput" accept="image/*" style="display:none">
@@ -348,7 +351,7 @@
         reader.readAsDataURL(file);
       }
     });
-  }, 100); // Delay agar elemen tersedia saat didaftarkan
+  }, 100);
 });
 
     function kembaliKeBeranda() {
