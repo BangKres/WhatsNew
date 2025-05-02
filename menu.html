@@ -43,6 +43,7 @@
       align-items: center;
       padding: 15px 0 10px;
       background-color: #000;
+      position: relative;
     }
 
     .top-bar .title {
@@ -51,11 +52,39 @@
       color: #fff;
     }
 
+    .top-bar .icons {
+      display: flex;
+      align-items: center;
+    }
+
     .top-bar .icons i {
       color: #fff;
       font-size: 18px;
       margin-left: 20px;
       cursor: pointer;
+    }
+
+    .popup-menu {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 10px 0;
+      box-shadow: 0 0 10px #000;
+      display: none;
+      width: 180px;
+      z-index: 999;
+    }
+
+    .popup-menu div {
+      padding: 10px 15px;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .popup-menu div:hover {
+      background-color: #333;
     }
 
     .search-bar {
@@ -159,7 +188,19 @@
       <div class="icons">
         <i class="fa fa-camera"></i>
         <i class="fa fa-search"></i>
-        <i class="fa fa-ellipsis-v"></i>
+        <i class="fa fa-ellipsis-v" onclick="toggleMenu()"></i>
+
+        <!-- Popup Menu -->
+        <div class="popup-menu" id="popupMenu">
+          <div>Grup baru</div>
+          <div>Komunitas baru</div>
+          <div>Siaran baru</div>
+          <div>Perangkat tertaut</div>
+          <div>Pesan berbintang</div>
+          <div>Baca semua</div>
+          <div>Pengaturan</div>
+          <div>Ganti akun</div>
+        </div>
       </div>
     </div>
 
@@ -223,6 +264,21 @@
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
       });
+    });
+
+    // Tampilkan/sembunyikan menu titik tiga
+    function toggleMenu() {
+      const menu = document.getElementById('popupMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Tutup menu jika klik di luar
+    document.addEventListener('click', function (e) {
+      const menu = document.getElementById('popupMenu');
+      const icon = document.querySelector('.fa-ellipsis-v');
+      if (!menu.contains(e.target) && !icon.contains(e.target)) {
+        menu.style.display = 'none';
+      }
     });
   </script>
 
