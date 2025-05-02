@@ -34,7 +34,28 @@
     }
 
     .header {
-      padding: 20px;
+      padding: 0 20px 10px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0 10px;
+      background-color: #000;
+    }
+
+    .top-bar .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .top-bar .icons i {
+      color: #fff;
+      font-size: 18px;
+      margin-left: 20px;
+      cursor: pointer;
     }
 
     .search-bar {
@@ -43,7 +64,7 @@
       background-color: #222;
       border-radius: 25px;
       padding: 10px 15px;
-      margin-bottom: 15px;
+      margin: 10px 0 15px;
       border: 1px solid var(--accent);
     }
 
@@ -86,8 +107,15 @@
       font-weight: bold;
     }
 
+    .filter-btn:active,
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+
     .content {
       flex: 1;
+      padding: 10px;
+      overflow-y: auto;
     }
 
     .bottom-nav {
@@ -104,6 +132,8 @@
       align-items: center;
       color: #aaa;
       font-size: 12px;
+      transition: 0.3s;
+      cursor: pointer;
     }
 
     .nav-item.active {
@@ -119,7 +149,20 @@
 </head>
 <body>
 
+  <!-- Suara klik -->
+  <audio id="clickSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+
   <div class="header">
+    <!-- Top bar ala WhatsApp -->
+    <div class="top-bar">
+      <div class="title">WhatsBro</div>
+      <div class="icons">
+        <i class="fa fa-camera"></i>
+        <i class="fa fa-search"></i>
+        <i class="fa fa-ellipsis-v"></i>
+      </div>
+    </div>
+
     <!-- Search Bar -->
     <div class="search-bar">
       <i class="fa fa-search" style="color:#999;"></i>
@@ -137,10 +180,9 @@
   </div>
 
   <div class="content">
-    <!-- Chat list atau konten lainnya -->
+    <!-- Konten Chat -->
   </div>
 
-  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <div class="nav-item active">
       <div class="nav-icon"><i class="fa fa-comment-alt"></i></div>
@@ -159,6 +201,30 @@
       <div>Telepon</div>
     </div>
   </div>
+
+  <script>
+    const clickSound = document.getElementById("clickSound");
+
+    // Tombol filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Bottom nav
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
 
 </body>
 </html>
