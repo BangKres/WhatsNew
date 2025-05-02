@@ -304,7 +304,7 @@
     });
 
     // Pengaturan klik
-    document.getElementById("menu-settings").addEventListener("click", function () {
+ document.getElementById("menu-settings").addEventListener("click", function () {
   clickSound.currentTime = 0;
   clickSound.play();
   document.getElementById('popupMenu').style.display = 'none';
@@ -312,29 +312,27 @@
   const savedImage = localStorage.getItem('profileImage') || 'https://via.placeholder.com/120';
 
   document.getElementById('mainContent').innerHTML = `
-    <!-- Background full layar -->
-    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: -1;"></div>
-
-    <!-- Konten di atas background -->
-    <div style="padding: 20px; text-align: center; position: relative; z-index: 1;">
-      <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-        <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
-        <input type="file" id="imageInput" accept="image/*" style="display:none">
-        <div onclick="document.getElementById('imageInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; padding: 6px; cursor: pointer;">
-          <i class="fa fa-camera" style="color: black;"></i>
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: flex; justify-content: center; align-items: center;">
+      <div style="width: 100%; max-width: 400px; padding: 20px; text-align: center; color: white;">
+        <div style="position: relative; display: inline-block; margin-bottom: 20px;">
+          <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
+          <input type="file" id="imageInput" accept="image/*" style="display:none">
+          <div onclick="document.getElementById('imageInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; padding: 6px; cursor: pointer;">
+            <i class="fa fa-camera" style="color: black;"></i>
+          </div>
         </div>
-      </div>
-      <div style="text-align: left;">
-        <label>Nama:</label><br>
-        <input class="form-input" type="text" placeholder="Masukkan nama"><br>
-        <label>Tentang:</label><br>
-        <input class="form-input" type="text" placeholder="Masukkan status"><br>
-        <label>Nomor Telepon:</label><br>
-        <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br>
-      </div>
-      <div style="margin-top: 20px;">
-        <button class="btn">Simpan</button>
-        <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
+        <div style="text-align: left;">
+          <label>Nama:</label><br>
+          <input class="form-input" type="text" placeholder="Masukkan nama"><br>
+          <label>Tentang:</label><br>
+          <input class="form-input" type="text" placeholder="Masukkan status"><br>
+          <label>Nomor Telepon:</label><br>
+          <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br>
+        </div>
+        <div style="margin-top: 20px;">
+          <button class="btn">Simpan</button>
+          <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
+        </div>
       </div>
     </div>
   `;
