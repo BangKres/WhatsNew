@@ -59,9 +59,13 @@
 
     .filters {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      justify-content: flex-start;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
     }
 
     .filter-btn {
@@ -73,12 +77,7 @@
       border: 1px solid transparent;
       white-space: nowrap;
       transition: 0.3s;
-    }
-
-    .filter-btn.plus {
-      width: 40px;
-      padding: 6px 0;
-      text-align: center;
+      flex-shrink: 0;
     }
 
     .filter-btn.active {
@@ -133,7 +132,7 @@
       <button class="filter-btn">Belum dibaca</button>
       <button class="filter-btn">Favorit</button>
       <button class="filter-btn">Grup</button>
-      <button class="filter-btn plus">+</button>
+      <button class="filter-btn">+</button>
     </div>
   </div>
 
