@@ -220,45 +220,6 @@
   const db = firebase.database();
 
 
-  function simpanPengaturan() {
-    const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
-    const nama = namaInput.value.trim();
-    const tentangInput = document.getElementById('tentangInput');
-    const userId = "user01";
-
-    if (nama === "") {
-      alert("Nama tidak boleh kosong.");
-      return;
-    }
-
-    // Generate kode unik 7 karakter (misalnya huruf besar)
-    const kodeUnik = generateKodeUnik();
-
-    // Simpan ke Firebase Realtime Database
-    db.ref('users/' + userId).set({
-      nama: nama,
-      kode: kodeUnik
-    }).then(() => {
-      // Tampilkan kode di input tentang
-      tentangInput.value = kodeUnik;
-
-      // Kembali ke halaman awal setelah 1 detik
-      setTimeout(() => {
-        window.location.href = "menu.html"; // ganti dengan halaman awalmu
-      }, 1000);
-    }).catch((error) => {
-      console.error("Gagal menyimpan:", error);
-    });
-  }
-
-  function generateKodeUnik() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let kode = "#";
-    for (let i = 0; i < 7; i++) {
-      kode += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return kode;
-  }
 
   window.loadUserData = function () {
     const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
@@ -433,8 +394,49 @@ function kembaliKeBeranda() {
   clickSound.currentTime = 0;
   clickSound.play();
   loadUserData();
-  window.location.href = "menu.html"; // Atur ke halaman awal
+   window.location.href = "menu.html"; //
 }
+function generateKodeUnik() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let kode = "#";
+  for (let i = 0; i < 7; i++) {
+    kode += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return kode;
+}
+
+function simpanPengaturan() {
+  const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
+  const nama = namaInput.value.trim();
+  const tentangInput = document.getElementById('tentangInput');
+  const userId = "user01";
+
+  if (nama === "") {
+    alert("Nama tidak boleh kosong.");
+    return;
+  }
+
+  // Generate kode unik dengan tanda # di awal
+  const kodeUnik = generateKodeUnik();
+
+  // Simpan ke Firebase Realtime Database
+  db.ref('users/' + userId).set({
+    nama: nama,
+    kode: kodeUnik
+  }).then(() => {
+    // Tampilkan kode di input tentang
+    tentangInput.value = kodeUnik;
+
+    // Kembali ke halaman awal setelah 1 detik
+    setTimeout(() => {
+      window.location.href = "menu.html"; // ganti dengan halaman awalmu
+    }, 1000);
+  }).catch((error) => {
+    console.error("Gagal menyimpan:", error);
+  });
+}
+
+
 </script>
 </body>
 </html>
