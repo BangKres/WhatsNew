@@ -413,27 +413,30 @@
     </div>
   `;
 
-  setTimeout(() => {
-    document.getElementById('imageInput').addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('profileImg').src = e.target.result;
-          localStorage.setItem('profileImage', e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  }, 100);
+setTimeout(() => {
+  document.getElementById('imageInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imgSrc = e.target.result;
+        document.getElementById('profileImg').src = imgSrc;
+        localStorage.setItem('profileImage', imgSrc);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}, 100);
 });
 
-    function kembaliKeBeranda() {
-      clickSound.currentTime = 0;
-      clickSound.play();
-      document.getElementById('mainContent').innerHTML = `<p style="text-align:center; margin-top: 30px;">Owner Developer Zutte</p>`;
-    }
-  </script>
-
+function kembaliKeBeranda() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+  loadUserData();
+  window.location.href = "menu.html"; // Atur ke halaman awal
+}
+</script>
 </body>
 </html>
+
+    
