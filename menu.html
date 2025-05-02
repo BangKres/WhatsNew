@@ -312,7 +312,8 @@
   const savedImage = localStorage.getItem('profileImage') || 'https://via.placeholder.com/120';
 
   document.getElementById('mainContent').innerHTML = `
-    <div style="padding: 20px; text-align: center;">
+  
+    <div style="padding: 20px; text-align: center; background: #000;">
       <div style="position: relative; display: inline-block; margin-bottom: 20px;">
         <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
         <input type="file" id="imageInput" accept="image/*" style="display:none">
