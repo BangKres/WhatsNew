@@ -348,33 +348,35 @@
   const savedImage = localStorage.getItem('profileImage') || 'https://via.placeholder.com/120';
 
   document.getElementById('mainContent').innerHTML = `
-    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: white; overflow-y: auto;">
-      <div style="max-width: 400px; margin: 40px auto; padding: 20px; text-align: center;">
-        <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-          <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-          <input type="file" id="imageInput" accept="image/*" style="display:none">
-          <div onclick="document.getElementById('imageInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; padding: 7px; cursor: pointer;">
-            <i class="fa fa-camera" style="color: black;"></i>
-          </div>
-        </div>
-        <div style="text-align: left;">
-          <label>Nama:</label><br>
-          
-          <input class="form-input" type="text" placeholder="Masukkan nama"><br>
-       
-          <input class="form-input" type="text" id="tentangInput" placeholder="Kode unik akan muncul di sini" readonly>
-          
-          <label>Nomor Telepon:</label><br>
-          <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br>
-        </div>
-        <button class="btn" onclick="simpanPengaturan()">Simpan</button>
-        
-        
-          <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
+  <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: white; overflow-y: auto;">
+    <div style="max-width: 400px; margin: 40px auto; padding: 20px; text-align: center;">
+      
+      <div style="position: relative; display: inline-block; margin-bottom: 20px;">
+        <img id="profileImg" src="${savedImage}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <div onclick="document.getElementById('imageInput').click()" style="position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; padding: 7px; cursor: pointer;">
+          <i class="fa fa-camera" style="color: black;"></i>
         </div>
       </div>
+      
+      <div style="text-align: left;">
+        <label for="namaInput">Nama:</label><br>
+        <input class="form-input" id="namaInput" type="text" placeholder="Masukkan nama"><br><br>
+
+        <label for="tentangInput">Kode Unik:</label><br>
+        <input class="form-input" id="tentangInput" type="text" placeholder="Kode unik akan muncul di sini" readonly><br><br>
+
+        <label>Nomor Telepon:</label><br>
+        <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br><br>
+      </div>
+
+      <button class="btn" onclick="simpanPengaturan()">Simpan</button>
+      <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
+      
     </div>
-  `;
+  </div>
+`;
+  
 
 setTimeout(() => {
   document.getElementById('imageInput').addEventListener('change', function () {
@@ -397,6 +399,75 @@ function kembaliKeBeranda() {
   clickSound.play();
   loadUserData();
   window.location.href = "menu.html"; // Atur ke halaman awal
+}
+</script>
+<script>
+function generateKodeUnik() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let kode = "#";
+  for (let i = 0; i < 7; i++) {
+    kode += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return kode;
+}
+
+function simpanPengaturan() {
+  const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
+  const tentangInput = document.getElementById('tentangInput');
+  const namaBaru = namaInput.value.trim();
+  const userId = "user01"; // Ganti sesuai user login
+
+  if (namaBaru === "") {
+    alert("Nama tidak boleh kosong.");
+    return;
+  }
+
+  const userRef = db.ref('users/' + userId);
+  const sekarang = new Date().getTime();
+  const batas30Hari = 30 * 24 * 60 * 60 * 1000;
+
+  userRef.once('value').then((snapshot) => {
+    const data = snapshot.val();
+
+    if (!data) {
+      // User belum pernah disimpan
+      const kodeBaru = generateKodeUnik();
+      userRef.set({
+        nama: namaBaru,
+        kode: kodeBaru,
+        lastUpdate: sekarang
+      }).then(() => {
+        tentangInput.value = kodeBaru;
+        alert("Pengaturan berhasil disimpan!");
+        kembaliKeBeranda();
+      });
+    } else {
+      const terakhirUpdate = data.lastUpdate || 0;
+      const bolehUpdate = sekarang - terakhirUpdate >= batas30Hari;
+
+      if (bolehUpdate) {
+        const kodeBaru = generateKodeUnik();
+        userRef.set({
+          nama: namaBaru,
+          kode: kodeBaru,
+          lastUpdate: sekarang
+        }).then(() => {
+          tentangInput.value = kodeBaru;
+          alert("Nama & kode berhasil diperbarui!");
+          kembaliKeBeranda();
+        });
+      } else {
+        // Tidak boleh update, tampilkan data lama
+        const sisaHari = Math.ceil((batas30Hari - (sekarang - terakhirUpdate)) / (24 * 60 * 60 * 1000));
+        alert("Nama hanya bisa diubah 1x per bulan.\nCoba lagi dalam " + sisaHari + " hari.");
+        namaInput.value = data.nama;
+        tentangInput.value = data.kode;
+      }
+    }
+  }).catch((error) => {
+    console.error("Gagal membaca data:", error);
+    alert("Terjadi kesalahan saat membaca database.");
+  });
 }
 </script>
 
