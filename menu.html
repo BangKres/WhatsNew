@@ -393,9 +393,11 @@ setTimeout(() => {
 function kembaliKeBeranda() {
   clickSound.currentTime = 0;
   clickSound.play();
-  loadUserData();
-   window.location.href = "menu.html"; //
+  window.location.href = "menu.html"; // Atur ke halaman awal
 }
+</script>
+
+<script>
 function generateKodeUnik() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let kode = "#";
@@ -407,8 +409,8 @@ function generateKodeUnik() {
 
 function simpanPengaturan() {
   const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
-  const nama = namaInput.value.trim();
   const tentangInput = document.getElementById('tentangInput');
+  const nama = namaInput.value.trim();
   const userId = "user01";
 
   if (nama === "") {
@@ -416,28 +418,23 @@ function simpanPengaturan() {
     return;
   }
 
-  // Generate kode unik dengan tanda # di awal
   const kodeUnik = generateKodeUnik();
+  tentangInput.value = kodeUnik;
 
-  // Simpan ke Firebase Realtime Database
   db.ref('users/' + userId).set({
     nama: nama,
     kode: kodeUnik
   }).then(() => {
-    // Tampilkan kode di input tentang
-    tentangInput.value = kodeUnik;
-
-    // Kembali ke halaman awal setelah 1 detik
-    setTimeout(() => {
-      window.location.href = "menu.html"; // ganti dengan halaman awalmu
-    }, 1000);
-  }).catch((error) => {
-    console.error("Gagal menyimpan:", error);
+    alert("Pengaturan berhasil disimpan!");
+    kembaliKeBeranda();
+  }).catch(error => {
+    console.error("Gagal menyimpan data:", error);
+    alert("Terjadi kesalahan saat menyimpan.");
   });
 }
-
-
 </script>
+
+
 </body>
 </html>
 
