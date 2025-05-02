@@ -265,49 +265,6 @@
     </div>
   </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  function generateCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let code = '#';
-    for (let i = 0; i < 8; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
-  }
-
-  function simpanDataKeFirebase() {
-    const nama = document.querySelectorAll('.form-input')[0].value;
-    const status = generateCode(); // auto generate code unik
-
-    db.collection("pengguna").add({
-      nama: nama,
-      status: status,
-      waktu: new Date()
-    }).then(() => {
-      // Auto isi field "Tentang" dengan kode unik
-      document.querySelectorAll('.form-input')[1].value = status;
-      alert("Data disimpan dengan kode unik: " + status);
-    }).catch((err) => {
-      console.error("Gagal simpan:", err);
-    });
-  }
-</script>
-
   <script>
     const clickSound = document.getElementById("clickSound");
 
@@ -381,23 +338,19 @@
   `;
 
   setTimeout(() => {
-  document.getElementById('imageInput').addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        document.getElementById('profileImg').src = e.target.result;
-        localStorage.setItem('profileImage', e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Event Tombol Simpan
-  document.querySelector('.btn').addEventListener('click', function () {
-    simpanDataKeFirebase(); // panggil fungsi simpan
-  });
-}, 100);
+    document.getElementById('imageInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('profileImg').src = e.target.result;
+          localStorage.setItem('profileImage', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }, 100);
+});
 
     function kembaliKeBeranda() {
       clickSound.currentTime = 0;
