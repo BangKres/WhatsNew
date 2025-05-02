@@ -173,6 +173,30 @@
       font-size: 18px;
       margin-bottom: 4px;
     }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #222;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -182,7 +206,6 @@
   <audio id="clickSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
 
   <div class="header">
-    <!-- Top bar ala WhatsApp -->
     <div class="top-bar">
       <div class="title">BangKres</div>
       <div class="icons">
@@ -198,20 +221,18 @@
           <div>Perangkat tertaut</div>
           <div>Pesan berbintang</div>
           <div>Baca semua</div>
-          <div>Pengaturan</div>
+          <div id="menu-settings">Pengaturan</div>
           <div>Ganti akun</div>
         </div>
       </div>
     </div>
 
-    <!-- Search Bar -->
     <div class="search-bar">
       <i class="fa fa-search" style="color:#999;"></i>
       <input type="text" placeholder="Cari atau ketik nama teman">
     </div>
 
-    <!-- Filter Buttons -->
-    <div class="filters">
+    <div class="filters" id="filterBar">
       <button class="filter-btn active">Semua</button>
       <button class="filter-btn">Belum dibaca</button>
       <button class="filter-btn">Favorit</button>
@@ -220,8 +241,9 @@
     </div>
   </div>
 
-  <div class="content">
-    <!-- Konten Chat -->
+  <div class="content" id="mainContent">
+    <!-- Konten awal -->
+    <p style="text-align:center; margin-top: 30px;">Selamat datang di Mym3 Chat!</p>
   </div>
 
   <div class="bottom-nav">
@@ -280,6 +302,42 @@
         menu.style.display = 'none';
       }
     });
+
+    // Pengaturan klik
+    document.getElementById("menu-settings").addEventListener("click", function () {
+  clickSound.currentTime = 0;
+  clickSound.play();
+  document.getElementById('popupMenu').style.display = 'none';
+
+  document.getElementById('mainContent').innerHTML = `
+    <div style="padding: 20px; text-align: center;">
+      <div style="position: relative; display: inline-block; margin-bottom: 20px;">
+        <img src="https://via.placeholder.com/120" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent);">
+        <div style="position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; padding: 6px; cursor: pointer;">
+          <i class="fa fa-camera" style="color: black;"></i>
+        </div>
+      </div>
+      <div style="text-align: left;">
+        <label>Nama:</label><br>
+        <input class="form-input" type="text" placeholder="Masukkan nama"><br>
+        <label>Tentang:</label><br>
+        <input class="form-input" type="text" placeholder="Masukkan status"><br>
+        <label>Nomor Telepon:</label><br>
+        <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="btn">Simpan</button>
+        <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
+      </div>
+    </div>
+  `;
+});
+
+    function kembaliKeBeranda() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+      document.getElementById('mainContent').innerHTML = `<p style="text-align:center; margin-top: 30px;">Selamat datang di Mym3 Chat!</p>`;
+    }
   </script>
 
 </body>
