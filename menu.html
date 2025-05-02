@@ -368,6 +368,8 @@
           <input class="form-input" type="text" value="+62 812-3456-7890" readonly><br>
         </div>
         <button class="btn" onclick="simpanPengaturan()">Simpan</button>
+        
+        
           <button class="btn" style="margin-left: 10px; background: #555; color: white;" onclick="kembaliKeBeranda()">Kembali</button>
         </div>
       </div>
@@ -395,43 +397,6 @@ function kembaliKeBeranda() {
   clickSound.play();
   loadUserData();
   window.location.href = "menu.html"; // Atur ke halaman awal
-}
-</script>
-
-<script>
-function generateKodeUnik() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let kode = "#";
-  for (let i = 0; i < 7; i++) {
-    kode += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return kode;
-}
-
-function simpanPengaturan() {
-  const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
-  const tentangInput = document.getElementById('tentangInput');
-  const nama = namaInput.value.trim();
-  const userId = "user01";
-
-  if (nama === "") {
-    alert("Nama tidak boleh kosong.");
-    return;
-  }
-
-  const kodeUnik = generateKodeUnik();
-  tentangInput.value = kodeUnik;
-
-  db.ref('users/' + userId).set({
-    nama: nama,
-    kode: kodeUnik
-  }).then(() => {
-    alert("Pengaturan berhasil disimpan!");
-    kembaliKeBeranda();
-  }).catch(error => {
-    console.error("Gagal menyimpan data:", error);
-    alert("Terjadi kesalahan saat menyimpan.");
-  });
 }
 </script>
 
