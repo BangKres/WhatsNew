@@ -159,7 +159,10 @@
     <div id="chatName">Chat</div>
     <div style="display: flex; gap: 10px;">
       <!-- ICON YOUTUBE (ukuran sejajar icon telpon) -->
-<svg viewBox="0 0 24 24" width="24" height="24" fill="white" onclick="openYouTube()">
+      
+
+ <!-- SVG trigger -->
+<svg viewBox="0 0 24 24" width="24" height="24" fill="white" style="cursor:pointer;" onclick="openYouTube()">
   <path d="M21.58 7.2c-.19-1.42-1.4-2.53-2.82-2.68C16.5 4.3 14.25 4.25 12 4.25s-4.5.05-6.76.27c-1.42.15-2.63 1.26-2.82 2.68C2 8.78 2 10.39 2 12s0 3.22.42 4.8c.19 1.42 1.4 2.53 2.82 2.68C7.5 19.7 9.75 19.75 12 19.75s4.5-.05 6.76-.27c1.42-.15 2.63-1.26 2.82-2.68.42-1.58.42-3.19.42-4.8s0-3.22-.42-4.8zM10 15v-6l5 3-5 3z"/>
 </svg>
 
@@ -195,32 +198,44 @@
       </svg>
     </button>
   </div>
-  <!-- Modal YouTube -->
-<div id="youtubeModal" style="
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;">
-  <div style="position: relative; width: 90%; max-width: 500px; background: #000; border-radius: 10px; overflow: hidden;">
-    <button onclick="closeModal()" style="
-      position: absolute;
-      top: 5px; right: 5px;
-      background: red; color: white;
-      border: none; border-radius: 50%;
-      width: 30px; height: 30px;
-      font-weight: bold; cursor: pointer;
-    ">X</button>
-    <iframe id="youtubeFrame" width="100%" height="300" frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen></iframe>
+</div>
+
+<!-- Modal -->
+<div id="youtubeModal" class="modal">
+  <div class="modal-content">
+    <h2>Cari Video YouTube</h2>
+    <input type="text" id="youtubeSearch" placeholder="Ketik judul video...">
+    <br><br>
+    <button onclick="searchYouTube()">Cari</button>
+    <p>Hasil akan dibuka di tab baru.</p>
+    <div class="close" onclick="closeModal()">&times;</div>
   </div>
 </div>
-  
+
+
 </div>
+
+<script>
+  function openYouTube() {
+    document.getElementById("youtubeModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("youtubeModal").style.display = "none";
+  }
+
+  function searchYouTube() {
+    const query = document.getElementById("youtubeSearch").value;
+    if (query.trim() === "") {
+      alert("Masukkan kata kunci pencarian!");
+      return;
+    }
+    const searchUrl = "https://m.youtube.com/results?search_query=" + encodeURIComponent(query);
+    window.open(searchUrl, "_blank");
+    closeModal();
+  }
+</script>     
+
 
 <script>
   const loginDiv = document.getElementById('login');
@@ -248,20 +263,6 @@
     chatName.innerText = currentUser;
   }
   
-function openYouTube() {
-  // Tampilkan modal dulu
-  document.getElementById("youtubeModal").style.display = "flex";
-
-  // Delay membuka YouTube supaya modal tampil dulu
-  setTimeout(function() {
-    window.open("https://m.youtube.com/?embeds_referring_euri=http%3A%2F%2Flocalhost%3A8158%2F&source_ve_path=MTc4MDUz", "_blank");
-  }, 100); // kasih delay 100ms
-}
-
-  function closeModal() {
-    // Sembunyikan modal
-    document.getElementById("youtubeModal").style.display = "none";
-  }
   function clearSelection() {
     if (selectedMessage) {
       selectedMessage.classList.remove('selected');

@@ -93,9 +93,9 @@
   }
 
   function closeModal() {
-    // Sembunyikan modal
-    document.getElementById("youtubeModal").style.display = "none";
-  }
+  document.getElementById("youtubeModal").style.display = "none";
+  document.getElementById("youtubeFrame").src = ""; // stop video
+}
 </script>
 
 </body>
