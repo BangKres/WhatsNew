@@ -250,11 +250,14 @@
   }
   
 function openYouTube() {
-    // Buka link YouTube di tab baru
+  // Tampilkan modal dulu
+  document.getElementById("youtubeModal").style.display = "flex";
+
+  // Delay membuka YouTube supaya modal tampil dulu
+  setTimeout(function() {
     window.open("https://m.youtube.com/?embeds_referring_euri=http%3A%2F%2Flocalhost%3A8158%2F&source_ve_path=MTc4MDUz", "_blank");
-    // Tampilkan modal
-    document.getElementById("youtubeModal").style.display = "flex";
-  }
+  }, 100); // kasih delay 100ms
+}
 
   function closeModal() {
     // Sembunyikan modal
