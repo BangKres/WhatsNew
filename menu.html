@@ -202,6 +202,79 @@
 </head>
 <body>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAWs21ruR4Tbu8Xspr1_0t9G4-bXKIrSHU",
+    authDomain: "projectbesar-4f8ce.firebaseapp.com",
+    projectId: "projectbesar-4f8ce",
+    storageBucket: "projectbesar-4f8ce.firebasestorage.app",
+    messagingSenderId: "780129512462",
+    appId: "1:780129512462:web:5c7ea2c54aa777e127a05f",
+    measurementId: "G-JL3VVKSD4F",
+    databaseURL: "https://projectbesar-4f8ce-default-rtdb.asia-southeast1.firebasedatabase.app"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Fungsi generate kode unik
+  function generateKodeUnik() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let kode = "#";
+    for (let i = 0; i < 7; i++) {
+      kode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return kode;
+  }
+
+  // Fungsi untuk menyimpan nama dan kode
+  window.simpanPengaturan = async function () {
+    const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
+    const tentangInput = document.getElementById('tentangInput');
+    const nama = namaInput.value.trim();
+    const kode = generateKodeUnik();
+    const userId = "user01"; // atau dari auth
+
+    try {
+      await set(ref(db, 'users/' + userId), {
+        nama: nama,
+        kode: kode
+      });
+
+      tentangInput.value = kode;
+
+      alert("Data berhasil disimpan: " + kode);
+      document.getElementById('mainContent').innerHTML = `
+        <p style="text-align:center; margin-top: 30px;">Owner Developer Zutte</p>
+      `;
+    } catch (error) {
+      console.error("Gagal menyimpan:", error);
+      alert("Gagal menyimpan data.");
+    }
+  };
+
+  // Load data jika sudah pernah disimpan
+  window.loadUserData = async function () {
+    const namaInput = document.querySelector('.form-input[placeholder="Masukkan nama"]');
+    const tentangInput = document.getElementById('tentangInput');
+    const userId = "user01";
+
+    try {
+      const snapshot = await get(child(ref(db), 'users/' + userId));
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        if (data.nama) namaInput.value = data.nama;
+        if (data.kode) tentangInput.value = data.kode;
+      }
+    } catch (error) {
+      console.error("Gagal memuat data:", error);
+    }
+  };
+</script>
+
   <!-- Suara klik -->
   <audio id="clickSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
 
