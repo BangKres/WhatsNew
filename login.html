@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daftar WhatsApp-like</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVtmSFXGMgEO97QwBJFcFip1fXqotFzFI",
+      authDomain: "whatsapp-ed801.firebaseapp.com",
+      projectId: "whatsapp-ed801",
+      storageBucket: "whatsapp-ed801.appspot.com",
+      messagingSenderId: "263371978522",
+      appId: "1:263371978522:web:679a5a4ca13c9b5fe4dea3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    let confirmationResult;
+
+    window.onload = () => {
+      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        callback: (response) => {
+          sendOTP();
+        }
+      }, auth);
+    };
+
+    window.sendOTP = () => {
+      const phoneInput = document.getElementById('phoneInput').value;
+      const phoneNumber = '+62' + phoneInput.replace(/^0+/, '');
+      const appVerifier = window.recaptchaVerifier;
+
+      signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        .then((result) => {
+          confirmationResult = result;
+          document.getElementById('otp-section').style.display = 'block';
+          document.getElementById('phone-section').style.display = 'none';
+        }).catch((error) => {
+          alert("Gagal kirim OTP: " + error.message);
+        });
+    };
+
+    window.verifyOTP = () => {
+      const code = document.getElementById('otpInput').value;
+      confirmationResult.confirm(code).then((result) => {
+        alert("Verifikasi berhasil! Selamat datang " + result.user.phoneNumber);
+      }).catch((error) => {
+        alert("Kode OTP salah: " + error.message);
+      });
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #25d366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #128c7e;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Daftar Akun</h2>
+    
+    <div id="phone-section">
+      <input type="tel" id="phoneInput" placeholder="Contoh: 81234567890" />
+      <div id="recaptcha-container"></div>
+      <button onclick="sendOTP()">Kirim OTP</button>
+    </div>
+
+    <div id="otp-section" style="display:none;">
+      <input type="text" id="otpInput" placeholder="Masukkan OTP" />
+      <button onclick="verifyOTP()">Verifikasi</button>
+    </div>
+  </div>
+</body>
+</html>
