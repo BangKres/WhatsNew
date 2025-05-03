@@ -249,12 +249,14 @@
     chatName.innerText = currentUser;
   }
   
+
 function openYouTube() {
-    // Buka link YouTube di tab baru
-    window.open("https://m.youtube.com/?embeds_referring_euri=http%3A%2F%2Flocalhost%3A8158%2F&source_ve_path=MTc4MDUz", "_blank");
-    // Tampilkan modal
-    document.getElementById("youtubeModal").style.display = "flex";
-  }
+  const youtubeLink = "https://www.youtube.com/embed/dQw4w9WgXcQ"; // GANTI LINK sesuai kebutuhan
+  document.getElementById("youtubeFrame").src = youtubeLink;
+  document.getElementById("youtubeModal").style.display = "flex";
+}
+
+
 
   function closeModal() {
     // Sembunyikan modal
