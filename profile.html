@@ -201,6 +201,40 @@ outline: none;
     const storage = firebase.storage();
 
 
+ 
+
+  // 2. Ambil userId dan buat referensi Firebase
+
+
+
+
+  // 4. Event ketika halaman selesai dimuat
+  document.addEventListener('DOMContentLoaded', function () {
+    userRef.once('value').then(snapshot => {
+      const data = snapshot.val();
+
+      if (data && data.nama) {
+        document.getElementById('namaInput').value = data.nama;
+      }
+
+      if (data && data.nomor) {
+        document.getElementById('nomorInput').value = data.nomor;
+      }
+
+      if (data && data.kode) {
+        document.getElementById('tentangInput').value = data.kode;
+      } else {
+        const kodeBaru = generateKodeUnik();
+        document.getElementById('tentangInput').value = kodeBaru;
+        userRef.update({ kode: kodeBaru });
+      }
+
+      if (data && data.profileUrl) {
+        document.getElementById('profile-pic').src = data.profileUrl + '?v=' + new Date().getTime();
+      }
+    });
+  });
+
 document.addEventListener('DOMContentLoaded', function () {
   userRef.once('value').then(snapshot => {
     const data = snapshot.val();
@@ -232,8 +266,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
     const upload = document.getElementById('upload');
     const profilePic = document.getElementById('profile-pic');
-    const userId = getAtauBuatUserId();
-    const userRef = db.ref('users/' + userId);
+      const userId = getAtauBuatUserId();
+  const userRef = db.ref('users/' + userId);
+    
 
     upload.addEventListener('change', function () {
   const file = this.files[0];
@@ -262,23 +297,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-    function getAtauBuatUserId() {
-      let id = localStorage.getItem('userId');
-      if (!id) {
-        id = 'user_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('userId', id);
-      }
-      return id;
+     // 1. Fungsi untuk ambil atau buat userId lokal
+  function getAtauBuatUserId() {
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+      userId = 'user_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('userId', userId);
     }
+    return userId;
+  }
 
-    function generateKodeUnik() {
-      const huruf = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      let kode = "#";
-      for (let i = 0; i < 7; i++) {
-        kode += huruf.charAt(Math.floor(Math.random() * huruf.length));
-      }
-      return kode;
-    }
+      // 3. Fungsi untuk buat kode unik
+  function generateKodeUnik() {
+    const timestamp = Date.now().toString(36);
+    const randomStr = Math.random().toString(36).substr(2, 5);
+    return 'KODE-' + timestamp + '-' + randomStr;
+  }
 
     document.getElementById('namaInput').addEventListener('input', function () {
       const tentangInput = document.getElementById('tentangInput');
