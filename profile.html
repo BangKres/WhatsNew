@@ -202,68 +202,40 @@ outline: none;
 
 
  
-
-  // 2. Ambil userId dan buat referensi Firebase
-
-
-
-
-  // 4. Event ketika halaman selesai dimuat
-  document.addEventListener('DOMContentLoaded', function () {
-    userRef.once('value').then(snapshot => {
-      const data = snapshot.val();
-
-      if (data && data.nama) {
-        document.getElementById('namaInput').value = data.nama;
-      }
-
-      if (data && data.nomor) {
-        document.getElementById('nomorInput').value = data.nomor;
-      }
-
-      if (data && data.kode) {
-        document.getElementById('tentangInput').value = data.kode;
-      } else {
-        const kodeBaru = generateKodeUnik();
-        document.getElementById('tentangInput').value = kodeBaru;
-        userRef.update({ kode: kodeBaru });
-      }
-
-      if (data && data.profileUrl) {
-        document.getElementById('profile-pic').src = data.profileUrl + '?v=' + new Date().getTime();
-      }
-    });
-  });
-
 document.addEventListener('DOMContentLoaded', function () {
   userRef.once('value').then(snapshot => {
     const data = snapshot.val();
 
-    // Tampilkan nama jika ada
     if (data && data.nama) {
       document.getElementById('namaInput').value = data.nama;
     }
 
-    // Tampilkan nomor jika ada
     if (data && data.nomor) {
       document.getElementById('nomorInput').value = data.nomor;
     }
 
-    // Tampilkan kode unik (tentangInput), atau buat baru jika belum ada
-    if (data && data.kode) {
+    // Periksa apakah kode sudah ada di localStorage
+    let kodeLokal = localStorage.getItem('kodeUnik');
+    if (kodeLokal) {
+      document.getElementById('tentangInput').value = kodeLokal;
+    } else if (data && data.kode) {
+      // Simpan ke localStorage jika sudah ada di Firebase
+      localStorage.setItem('kodeUnik', data.kode);
       document.getElementById('tentangInput').value = data.kode;
     } else {
+      // Jika belum ada, buat baru
       const kodeBaru = generateKodeUnik();
+      localStorage.setItem('kodeUnik', kodeBaru);
       document.getElementById('tentangInput').value = kodeBaru;
       userRef.update({ kode: kodeBaru });
     }
 
-    // Tampilkan foto profil jika ada
     if (data && data.profileUrl) {
-      document.getElementById('profile-pic').src = data.profileUrl + '?v=' + new Date().getTime(); // Cache-busting
+      document.getElementById('profile-pic').src = data.profileUrl + '?v=' + new Date().getTime();
     }
   });
 });
+
     const upload = document.getElementById('upload');
     const profilePic = document.getElementById('profile-pic');
       const userId = getAtauBuatUserId();
