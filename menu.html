@@ -312,6 +312,29 @@
   function closeGoggle() { closePopup("popupGoggle"); }
 </script>
 
+<script>
+  const cameraView = document.getElementById('cameraView');
+
+  async function openCameraFullscreen() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      cameraView.srcObject = stream;
+      cameraView.style.display = 'block';
+
+      // Klik layar untuk menutup kamera
+      cameraView.onclick = () => {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+        cameraView.style.display = 'none';
+        cameraView.srcObject = null;
+      };
+    } catch (error) {
+      alert('Gagal membuka kamera: ' + error.message);
+    }
+  }
+</script>
+
+
   
     <i   class="fa fa-camera"></i>
     <i   class="fa fa-search"></i>
