@@ -258,48 +258,51 @@ outline: none;
     });
 
     function simpanPengaturan() {
-      const namaBaru = document.getElementById('namaInput').value.trim();
-      const kodeUnik = document.getElementById('tentangInput').value.trim();
-      const sekarang = Date.now();
-      const batas30Hari = 30 * 24 * 60 * 60 * 1000;
+  const namaBaru = document.getElementById('namaInput').value.trim();
+  const kodeUnik = document.getElementById('tentangInput').value.trim();
+  const sekarang = Date.now();
+  const batas30Hari = 30 * 24 * 60 * 60 * 1000;
 
-      if (!namaBaru || !kodeUnik) {
-        showAlert("Nama dan kode unik wajib diisi.");
-        return;
-      }
+  if (!namaBaru || !kodeUnik) {
+    showAlert("Nama dan kode unik wajib diisi.");
+    return;
+  }
 
-      userRef.once('value').then(snapshot => {
-        const data = snapshot.val();
-        const lastUpdate = data?.lastUpdate || 0;
-        const bolehUpdate = sekarang - lastUpdate >= batas30Hari;
+  userRef.once('value').then(snapshot => {
+    const data = snapshot.val();
+    const lastUpdate = data?.lastUpdate || 0;
+    const bolehUpdate = sekarang - lastUpdate >= batas30Hari;
 
-        if (!data || bolehUpdate) {
-          userRef.update({
-            nama: namaBaru,
-            kode: kodeUnik,
-            lastUpdate: sekarang
-          }).then(() => {
-            localStorage.setItem('nama', namaBaru);
-            localStorage.setItem('kode', kodeUnik);
-            showAlert("Data berhasil disimpan!");
-            setTimeout(() => {
-              window.location.href = "menu.html";
-            }, 1500);
-          });
-        } else {
-          const sisaHari = Math.ceil((batas30Hari - (sekarang - lastUpdate)) / (24 * 60 * 60 * 1000));
-          showAlert("Nama hanya bisa diubah 1x per bulan.\nCoba lagi dalam " + sisaHari + " hari.");
-          document.getElementById('namaInput').value = data.nama;
-          document.getElementById('tentangInput').value = data.kode;
-          setTimeout(() => {
-            window.location.href = "menu.html";
-          }, 1500);
-        }
-      }).catch(err => {
-        console.error("Gagal simpan:", err);
-        showAlert("Terjadi kesalahan saat menyimpan.");
+    if (!data || bolehUpdate) {
+      const fotoURL = data?.profileUrl || ""; // gunakan URL foto yang sudah diunggah sebelumnya
+      userRef.update({
+        nama: namaBaru,
+        kode: kodeUnik,
+        lastUpdate: sekarang,
+        profileUrl: fotoURL
+      }).then(() => {
+        localStorage.setItem('nama', namaBaru);
+        localStorage.setItem('kode', kodeUnik);
+        localStorage.setItem('foto', fotoURL);
+        showAlert("Data berhasil disimpan!");
+        setTimeout(() => {
+          window.location.href = "menu.html";
+        }, 1500);
       });
+    } else {
+      const sisaHari = Math.ceil((batas30Hari - (sekarang - lastUpdate)) / (24 * 60 * 60 * 1000));
+      showAlert("Nama hanya bisa diubah 1x per bulan.\nCoba lagi dalam " + sisaHari + " hari.");
+      document.getElementById('namaInput').value = data.nama;
+      document.getElementById('tentangInput').value = data.kode;
+      setTimeout(() => {
+        window.location.href = "menu.html";
+      }, 1500);
     }
+  }).catch(err => {
+    console.error("Gagal simpan:", err);
+    showAlert("Terjadi kesalahan saat menyimpan.");
+  });
+}
 
     function muatPengaturan() {
       const namaInput = document.getElementById('namaInput');
