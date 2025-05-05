@@ -200,6 +200,36 @@ outline: none;
     const db = firebase.database();
     const storage = firebase.storage();
 
+
+document.addEventListener('DOMContentLoaded', function () {
+  userRef.once('value').then(snapshot => {
+    const data = snapshot.val();
+
+    // Tampilkan nama jika ada
+    if (data && data.nama) {
+      document.getElementById('namaInput').value = data.nama;
+    }
+
+    // Tampilkan nomor jika ada
+    if (data && data.nomor) {
+      document.getElementById('nomorInput').value = data.nomor;
+    }
+
+    // Tampilkan kode unik (tentangInput), atau buat baru jika belum ada
+    if (data && data.kode) {
+      document.getElementById('tentangInput').value = data.kode;
+    } else {
+      const kodeBaru = generateKodeUnik();
+      document.getElementById('tentangInput').value = kodeBaru;
+      userRef.update({ kode: kodeBaru });
+    }
+
+    // Tampilkan foto profil jika ada
+    if (data && data.profileUrl) {
+      document.getElementById('profile-pic').src = data.profileUrl + '?v=' + new Date().getTime(); // Cache-busting
+    }
+  });
+});
     const upload = document.getElementById('upload');
     const profilePic = document.getElementById('profile-pic');
     const userId = getAtauBuatUserId();
@@ -305,25 +335,32 @@ outline: none;
 }
 
     function muatPengaturan() {
-      const namaInput = document.getElementById('namaInput');
-      const tentangInput = document.getElementById('tentangInput');
+  const namaInput = document.getElementById('namaInput');
+  const tentangInput = document.getElementById('tentangInput');
+  const profilePic = document.getElementById('profile-pic');
 
-      const nama = localStorage.getItem('nama');
-      const kode = localStorage.getItem('kode');
-      if (nama) namaInput.value = nama;
-      if (kode) tentangInput.value = kode;
+  const nama = localStorage.getItem('nama');
+  const kode = localStorage.getItem('kode');
+  const foto = localStorage.getItem('foto'); // Ambil URL foto dari localStorage
 
-      userRef.once('value').then(snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          namaInput.value = data.nama || namaInput.value;
-          tentangInput.value = data.kode || tentangInput.value;
-          if (data.profileUrl) profilePic.src = data.profileUrl;
-        }
-      });
+  if (nama) namaInput.value = nama;
+  if (kode) tentangInput.value = kode;
+  if (foto) profilePic.src = foto;
+
+  userRef.once('value').then(snapshot => {
+    const data = snapshot.val();
+    if (data) {
+      namaInput.value = data.nama || namaInput.value;
+      tentangInput.value = data.kode || tentangInput.value;
+      if (data.profileUrl) {
+        profilePic.src = data.profileUrl;
+        localStorage.setItem('foto', data.profileUrl); // Simpan URL ke localStorage juga
+      }
     }
+  });
+}
 
-    window.onload = muatPengaturan;
+window.onload = muatPengaturan;
   </script>
   
   
