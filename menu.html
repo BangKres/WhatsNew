@@ -316,8 +316,6 @@
 <!-- Ikon kamera -->
 <i class="fa fa-camera" onclick="openCameraFullscreen()" style="font-size:24px; cursor:pointer;"></i>
 
-
-
 <!-- Fullscreen Kamera -->
 <div id="cameraContainer" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; z-index:9999; font-family:sans-serif; transition:opacity 0.3s ease;">
   <video id="cameraView" autoplay playsinline style="width:100vw; height:100vh; object-fit:cover; position:absolute; top:0; left:0;"></video>
@@ -325,11 +323,12 @@
   <!-- Thumbnail -->
   <img id="photoThumbnail" style="position:absolute; bottom:60px; left:20px; width:50px; height:50px; object-fit:cover; border-radius:10px; display:none; border:2px solid white;" />
 
-  <!-- TOP BAR dan elemen lainnya tetap seperti kode kamu sebelumnya... -->
+  <!-- Zoom slider -->
+  <input id="zoomSlider" type="range" style="position:absolute; bottom:130px; left:10%; width:80%; display:none; z-index:999;" />
 
   <!-- SHUTTER & CONTROL -->
   <div style="position:absolute; bottom:60px; width:100%; display:flex; justify-content:space-around; align-items:center;">
-    <div style="width:50px; height:50px; background:#aaa; border-radius:10px;"></div>
+    <button onclick="closeCamera()" style="width:50px; height:50px; border-radius:50%; background:gray; border:none; color:white;">X</button>
     <button onclick="takePhoto()" style="width:70px; height:70px; border-radius:50%; background:white; border:none;"></button>
     <button onclick="flipCamera()" style="width:50px; height:50px; background:none; border:none;">
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="32" height="32" viewBox="0 0 24 24">
@@ -345,14 +344,13 @@
 <script>
   const cameraView = document.getElementById('cameraView');
   const cameraContainer = document.getElementById('cameraContainer');
-  const flashSlash = document.getElementById('flashSlash');
   const thumbnail = document.getElementById('photoThumbnail');
   const shutterSound = document.getElementById('cameraSound');
+  const zoomSlider = document.getElementById('zoomSlider');
 
   let currentStream = null;
-  let useFrontCamera = true;
   let currentTrack = null;
-  let flashOn = false;
+  let useFrontCamera = true;
 
   async function openCameraFullscreen() {
     try {
@@ -372,27 +370,30 @@
         facingMode: useFrontCamera ? 'user' : 'environment',
         width: { ideal: 1280 },
         height: { ideal: 720 },
-        frameRate: { ideal: 30 },
-        zoom: true
+        frameRate: { ideal: 30 }
       }
     };
 
-    currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-    cameraView.srcObject = currentStream;
-    currentTrack = currentStream.getVideoTracks()[0];
-    cameraView.style.transform = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+    try {
+      currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+      cameraView.srcObject = currentStream;
+      currentTrack = currentStream.getVideoTracks()[0];
+      cameraView.style.transform = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
 
-    const zoomSlider = document.getElementById('zoomSlider');
-    const capabilities = currentTrack.getCapabilities();
-    if (capabilities.zoom) {
-      zoomSlider.min = capabilities.zoom.min;
-      zoomSlider.max = capabilities.zoom.max;
-      zoomSlider.step = capabilities.zoom.step || 0.1;
-      zoomSlider.value = currentTrack.getSettings().zoom || capabilities.zoom.min;
-      zoomSlider.style.display = 'block';
-      zoomSlider.oninput = () => setZoom(zoomSlider.value);
-    } else {
-      zoomSlider.style.display = 'none';
+      const capabilities = currentTrack.getCapabilities();
+      if (capabilities.zoom) {
+        zoomSlider.min = capabilities.zoom.min;
+        zoomSlider.max = capabilities.zoom.max;
+        zoomSlider.step = capabilities.zoom.step || 0.1;
+        zoomSlider.value = currentTrack.getSettings().zoom || capabilities.zoom.min;
+        zoomSlider.style.display = 'block';
+        zoomSlider.oninput = () => setZoom(zoomSlider.value);
+      } else {
+        zoomSlider.style.display = 'none';
+      }
+    } catch (err) {
+      console.error('Camera error:', err);
+      throw err;
     }
   }
 
@@ -400,18 +401,6 @@
     if (currentTrack) {
       currentTrack.applyConstraints({ advanced: [{ zoom: parseFloat(value) }] });
     }
-  }
-
-  function toggleFlash() {
-    if (!currentTrack) return;
-    const capabilities = currentTrack.getCapabilities();
-    if (!capabilities.torch) {
-      alert('Flash tidak didukung di perangkat ini.');
-      return;
-    }
-    flashOn = !flashOn;
-    currentTrack.applyConstraints({ advanced: [{ torch: flashOn }] });
-    flashSlash.style.display = flashOn ? 'none' : 'block';
   }
 
   function takePhoto() {
@@ -437,7 +426,7 @@
     thumbnail.src = photoData;
     thumbnail.style.display = 'block';
 
-    // Simpan ke galeri (download otomatis)
+    // Simpan otomatis
     const link = document.createElement('a');
     link.href = photoData;
     link.download = 'photo_' + Date.now() + '.png';
@@ -452,8 +441,7 @@
     setTimeout(() => {
       cameraContainer.style.display = 'none';
       cameraView.srcObject = null;
-      flashOn = false;
-      flashSlash.style.display = 'block';
+      zoomSlider.style.display = 'none';
     }, 300);
   }
 
