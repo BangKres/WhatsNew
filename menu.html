@@ -317,32 +317,25 @@
 <i class="fa fa-camera" onclick="openCameraFullscreen()" style="font-size:24px; cursor:pointer;"></i>
 
 
-
 <!-- Fullscreen Kamera -->
 <div id="cameraContainer" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; z-index:9999; font-family:sans-serif; transition:opacity 0.3s ease;">
-  <!-- Video Feed -->
   <video id="cameraView" autoplay playsinline style="width:100vw; height:100vh; object-fit:cover; position:absolute; top:0; left:0;"></video>
 
   <!-- TOP BAR -->
   <div style="position:absolute; top:20px; width:100%; display:flex; justify-content:space-around; align-items:center; color:white;">
-    <!-- Flash -->
     <svg id="flashIcon" onclick="toggleFlash()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
       <path d="M7 2v11h3v9l7-12h-4l3-8z"/>
       <line id="flashSlash" x1="4" y1="4" x2="20" y2="20" stroke="red" stroke-width="2" style="display:none;" />
     </svg>
-    <!-- HDR -->
     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
       <path d="M4 7h2v10H4V7zm3.5 0H10c1.38 0 2.5 1.12 2.5 2.5S11.38 12 10 12h-1v5H7.5V7zm2.5 2.5c0-.28-.22-.5-.5-.5H9v3h.5c.28 0 .5-.22.5-.5v-2zM17 10h2v4h-2v-4zm3-3v10h-1.5V7H20z"/>
     </svg>
-    <!-- Filter -->
     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
       <path d="M3 17h18v2H3v-2zm0-6h12v2H3v-2zm0-6h6v2H3V5z"/>
     </svg>
-    <!-- Settings -->
     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
       <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.63l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.025 7.025 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54a7.025 7.025 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.6.22L2.7 8.85a.5.5 0 0 0 .12.63L4.85 11.06c-.04.31-.06.63-.06.94s.02.63.06.94L2.82 14.52a.5.5 0 0 0-.12.63l1.92 3.32c.14.24.44.34.7.22l2.39-.96c.5.38 1.05.7 1.62.94l.36 2.54c.04.26.25.42.5.42h3.84c.25 0 .46-.16.5-.42l.36-2.54c.57-.24 1.12-.56 1.62-.94l2.39.96c.26.12.56.02.7-.22l1.92-3.32a.5.5 0 0 0-.12-.63l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/>
     </svg>
-    <!-- Menu -->
     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 24 24">
       <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
     </svg>
