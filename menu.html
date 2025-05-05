@@ -269,12 +269,12 @@
     <div class="icons">
  
       <!-- Icon Youtube -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" onclick="ButtonYoutube()" viewBox="0 0 900 512" style="cursor: pointer;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" onclick="ButtonYoutube()" viewBox="0 0 900 512" style="cursor: pointer;">
         <path fill="#ffffff" d="M549.7 124.1c-6.3-23.8-24.9-42.5-48.6-48.9C458.6 64 288 64 288 64S117.4 64 74.9 75.2C51.2 81.6 32.6 100.3 26.3 124.1 16 166.6 16 256 16 256s0 89.4 10.3 131.9c6.3 23.8 24.9 42.5 48.6 48.9C117.4 448 288 448 288 448s170.6 0 213.1-11.2c23.8-6.3 42.3-25.1 48.6-48.9 10.3-42.5 10.3-131.9 10.3-131.9s0-89.4-10.3-131.9zM232 336V176l142 80-142 80z"/> 
         </svg>
 
       <!-- Icon Google -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" onclick="ButtonGoggle()" viewBox="0 0 48 48" style="cursor: pointer;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" onclick="ButtonGoggle()" viewBox="0 0 48 48" style="cursor: pointer;">
         <path fill="#ffffff" d="M44.5 20H24v8.5h11.9C34.3 33.1 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l6-6C34.1 6.2 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.7-.5-4z"/> 
         </svg>
 
@@ -312,31 +312,95 @@
   function closeGoggle() { closePopup("popupGoggle"); }
 </script>
 
+
+
+<!-- Ikon kamera -->
+<i class="fa fa-camera" onclick="openCameraFullscreen()" style="font-size:24px; cursor:pointer;"></i>
+
+<!-- Container kamera fullscreen -->
+<div id="cameraContainer" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:black; z-index:9999;">
+  <video id="cameraView" autoplay playsinline style="width:100vw; height:100vh; object-fit:cover;"></video>
+
+  <!-- Tombol ambil gambar -->
+  <button onclick="takePhoto()" style="position:absolute; bottom:60px; left:50%; transform:translateX(-50%); background:white; width:70px; height:70px; border-radius:50%; border:none;"></button>
+
+  <!-- Tombol tutup kamera -->
+  <button onclick="closeCamera()" style="position:absolute; top:20px; left:20px; color:white; font-size:30px; background:none; border:none;">×</button>
+
+  <!-- Tombol flip kamera -->
+  <button onclick="flipCamera()" style="position:absolute; top:20px; right:20px; color:white; font-size:24px; background:none; border:none;">⟳</button>
+</div>
+
 <script>
   const cameraView = document.getElementById('cameraView');
+  const cameraContainer = document.getElementById('cameraContainer');
+  let currentStream = null;
+  let useFrontCamera = true;
 
   async function openCameraFullscreen() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      cameraView.srcObject = stream;
-      cameraView.style.display = 'block';
-
-      // Klik layar untuk menutup kamera
-      cameraView.onclick = () => {
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
-        cameraView.style.display = 'none';
-        cameraView.srcObject = null;
-      };
+      await startCamera();
+      cameraContainer.style.display = 'block';
     } catch (error) {
       alert('Gagal membuka kamera: ' + error.message);
     }
   }
+
+  async function startCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+    }
+
+    const constraints = {
+      video: {
+        facingMode: useFrontCamera ? 'user' : 'environment',
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 30 }
+      }
+    };
+
+    currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+    cameraView.srcObject = currentStream;
+
+    // Mirror jika kamera depan
+    cameraView.style.transform = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+  }
+
+  function takePhoto() {
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraView.videoWidth;
+    canvas.height = cameraView.videoHeight;
+    const ctx = canvas.getContext('2d');
+
+    // Mirror jika kamera depan
+    if (useFrontCamera) {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+
+    ctx.drawImage(cameraView, 0, 0);
+    const photoData = canvas.toDataURL('image/png');
+    console.log('Foto diambil:', photoData);
+    closeCamera();
+  }
+
+  function closeCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+    }
+    cameraContainer.style.display = 'none';
+    cameraView.srcObject = null;
+  }
+
+  function flipCamera() {
+    useFrontCamera = !useFrontCamera;
+    startCamera();
+  }
 </script>
-
-
   
-    <i   class="fa fa-camera"></i>
+  
+    
     <i   class="fa fa-search"></i>
     <i   class="fa fa-ellipsis-v" onclick="toggleMenu()"></i>
 
@@ -353,6 +417,8 @@
    </div>
    </div>
    </div>
+
+
 
     <div class="search-bar">
     <i   class="fa fa-search" style="color:#999;"></i>
