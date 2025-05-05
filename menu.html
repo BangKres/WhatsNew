@@ -329,13 +329,23 @@
 
   <!-- Tombol flip kamera -->
   <button onclick="flipCamera()" style="position:absolute; top:20px; right:20px; color:white; font-size:24px; background:none; border:none;">⟳</button>
+
+  <!-- Tombol flash -->
+  <button id="flashToggle" onclick="toggleFlash()" style="position:absolute; top:80px; right:20px; color:white; font-size:24px; background:none; border:none;">⚡</button>
+
+  <!-- Slider Zoom -->
+  <input type="range" id="zoomSlider" min="1" max="3" step="0.1"
+         style="position:absolute; bottom:140px; left:50%; transform:translateX(-50%); width:80%;" oninput="setZoom(this.value)">
 </div>
 
 <script>
   const cameraView = document.getElementById('cameraView');
   const cameraContainer = document.getElementById('cameraContainer');
+  const flashToggle = document.getElementById('flashToggle');
   let currentStream = null;
   let useFrontCamera = true;
+  let currentTrack = null;
+  let flashOn = false;
 
   async function openCameraFullscreen() {
     try {
@@ -356,15 +366,59 @@
         facingMode: useFrontCamera ? 'user' : 'environment',
         width: { ideal: 1280 },
         height: { ideal: 720 },
-        frameRate: { ideal: 30 }
+        frameRate: { ideal: 30 },
+        zoom: true
       }
     };
 
     currentStream = await navigator.mediaDevices.getUserMedia(constraints);
     cameraView.srcObject = currentStream;
 
+    currentTrack = currentStream.getVideoTracks()[0];
+
     // Mirror jika kamera depan
     cameraView.style.transform = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+
+    // Setup zoom slider
+    const zoomSlider = document.getElementById('zoomSlider');
+    const capabilities = currentTrack.getCapabilities();
+    if (capabilities.zoom) {
+      zoomSlider.min = capabilities.zoom.min;
+      zoomSlider.max = capabilities.zoom.max;
+      zoomSlider.step = capabilities.zoom.step || 0.1;
+      zoomSlider.value = currentTrack.getSettings().zoom || capabilities.zoom.min;
+      zoomSlider.style.display = 'block';
+    } else {
+      zoomSlider.style.display = 'none';
+    }
+
+    // Setup flash icon
+    updateFlashIcon();
+  }
+
+  function setZoom(zoomValue) {
+    if (currentTrack) {
+      currentTrack.applyConstraints({
+        advanced: [{ zoom: parseFloat(zoomValue) }]
+      });
+    }
+  }
+
+  function toggleFlash() {
+    if (!currentTrack) return;
+    const capabilities = currentTrack.getCapabilities();
+    if (!capabilities.torch) {
+      alert('Perangkat ini tidak mendukung flash.');
+      return;
+    }
+
+    flashOn = !flashOn;
+    currentTrack.applyConstraints({ advanced: [{ torch: flashOn }] });
+    updateFlashIcon();
+  }
+
+  function updateFlashIcon() {
+    flashToggle.textContent = flashOn ? '⚡️' : '⚡';
   }
 
   function takePhoto() {
@@ -373,7 +427,6 @@
     canvas.height = cameraView.videoHeight;
     const ctx = canvas.getContext('2d');
 
-    // Mirror jika kamera depan
     if (useFrontCamera) {
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
@@ -391,6 +444,7 @@
     }
     cameraContainer.style.display = 'none';
     cameraView.srcObject = null;
+    flashOn = false;
   }
 
   function flipCamera() {
