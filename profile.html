@@ -57,6 +57,51 @@
       background-color: #222; color: white; font-size: 15px;
     }
     .form-input::placeholder { color: #aaa; }
+    /* Animasi slide & fade */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+#popup-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111;
+  color: white;
+  z-index: 9999;
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+  display: none;
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+#popup-menu.closing {
+  animation: slideDown 0.3s ease-in forwards;
+}
+/*Menghilang Kan Warna Biru Button*/
+* {
+-webkit-tap-highlight-color: transparent; 
+outline: none;
+}
+    
   </style>
 </head>
 <body>
@@ -70,16 +115,52 @@
       </label>
       <input type="file" id="upload" accept="image/*">
     </div>
-    <div id="popup-menu" style="display:none; position:fixed; bottom:0; left:0; right:0; background:#222; color:white; border-top:1px solid #555; z-index:9999; padding:10px 0; text-align:center;">
-  <div style="padding:10px; border-bottom:1px solid #444; cursor:pointer;" onclick="ambilFoto()">Ambil Foto</div>
-  
-  <div style="padding:10px; border-bottom:1px solid #444; cursor:pointer;" onclick="pilihDariGaleri()">Pilih dari Galeri</div
-  >
-  <div style="padding:10px; cursor:pointer;" onclick="pakaiAvatar()">Avatar Default</div>
-  
-  <div style="padding:10px; color:#aaa; font-size:13px;" onclick="tutupPopup()">Batal</div>
-</div>
     
+<!-- Popup Menu -->
+<div id="popup-menu">
+  <h3 style="margin-bottom:20px; text-align:center;">Foto profil</h3>
+  <div style="display:flex; justify-content:space-around; margin-bottom:20px;">
+    
+    <!-- Kamera -->
+    <div onclick="ambilFoto()" style="text-align:center; cursor:pointer;">
+      <div style="width:60px; height:60px; border-radius:30px; background:#222; display:flex; align-items:center; justify-content:center; margin:auto;">
+        <svg width="28" height="28" fill="#FFD700" viewBox="0 0 24 24">
+          <path d="M20 5h-3.17l-1.83-2H9L7.17 5H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2zm-8 13a5 5 0 110-10 5 5 0 010 10zm0-8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
+        </svg>
+        
+        
+        
+      </div>
+      <div style="margin-top:5px; font-size:14px;">Kamera</div>
+    </div>
+
+    <!-- Galeri -->
+    <div onclick="pilihDariGaleri()" style="text-align:center; cursor:pointer;">
+      <div style="width:60px; height:60px; border-radius:30px; background:#222; display:flex; align-items:center; justify-content:center; margin:auto;">
+        <svg width="28" height="28" fill="#FFD700" viewBox="0 0 24 24">
+          <path d="M21 19V5H3v14h18zm0-16c1.1 0 2 .9 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h18zM8 14l2.5 3.01L14.5 13l4.5 6H5l3-5z"/>
+        </svg>
+      </div>
+      <div style="margin-top:5px; font-size:14px;">Galeri</div>
+    </div>
+
+    <!-- Avatar -->
+    <div onclick="pakaiAvatar()" style="text-align:center; cursor:pointer;">
+      <div style="width:60px; height:60px; border-radius:30px; background:#222; display:flex; align-items:center; justify-content:center; margin:auto;">
+        <svg width="28" height="28" fill="#FFD700" viewBox="0 0 24 24">
+          <path d="M12 12c2.7 0 4.5-1.8 4.5-4.5S14.7 3 12 3 7.5 4.8 7.5 7.5 9.3 12 12 12zm0 2c-3 0-9 1.5-9 4.5V21h18v-2.5c0-3-6-4.5-9-4.5z"/>
+        </svg>
+      </div>
+      <div style="margin-top:5px; font-size:14px;">Avatar</div>
+    </div>
+
+  </div>
+  <div onclick="tutupPopup()" style="color:#aaa; font-size:14px; text-align:center; padding:10px; cursor:pointer;">Batal</div>
+</div>
+
+    
+    
+
     <div class="form-group">
       <label for="namaInput">Nama:</label>
       <input class="form-input" id="namaInput" type="text" placeholder="Masukkan nama">
@@ -94,7 +175,13 @@
     </div>
   </div>
 
-
+  <!-- Custom Alert -->
+<div id="custom-alert" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+  <div style="background:#222; color:#fff; padding:20px; border-radius:12px; width:80%; max-width:300px; text-align:center; box-shadow:0 0 10px #000;">
+    <p id="alert-message" style="margin-bottom:20px; font-size:16px;">Pesan di sini</p>
+    <button onclick="closeAlert()" style="background:#FFD700; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">OK</button>
+  </div>
+</div>
 
 
   <script>
@@ -140,7 +227,7 @@
     userRef.update({ profileUrl: res.data.secure_url }); // yang disimpan tetap URL asli
   })
     .catch(err => {
-      alert("Gagal upload ke Cloudinary.");
+      showAlert("Gagal upload ke Cloudinary.");
       console.error(err);
     });
 });
@@ -177,7 +264,7 @@
       const batas30Hari = 30 * 24 * 60 * 60 * 1000;
 
       if (!namaBaru || !kodeUnik) {
-        alert("Nama dan kode unik wajib diisi.");
+        showAlert("Nama dan kode unik wajib diisi.");
         return;
       }
 
@@ -194,14 +281,14 @@
           }).then(() => {
             localStorage.setItem('nama', namaBaru);
             localStorage.setItem('kode', kodeUnik);
-            alert("Data berhasil disimpan!");
+            showAlert("Data berhasil disimpan!");
             setTimeout(() => {
               window.location.href = "menu.html";
             }, 1500);
           });
         } else {
           const sisaHari = Math.ceil((batas30Hari - (sekarang - lastUpdate)) / (24 * 60 * 60 * 1000));
-          alert("Nama hanya bisa diubah 1x per bulan.\nCoba lagi dalam " + sisaHari + " hari.");
+          showAlert("Nama hanya bisa diubah 1x per bulan.\nCoba lagi dalam " + sisaHari + " hari.");
           document.getElementById('namaInput').value = data.nama;
           document.getElementById('tentangInput').value = data.kode;
           setTimeout(() => {
@@ -210,7 +297,7 @@
         }
       }).catch(err => {
         console.error("Gagal simpan:", err);
-        alert("Terjadi kesalahan saat menyimpan.");
+        showAlert("Terjadi kesalahan saat menyimpan.");
       });
     }
 
@@ -245,12 +332,24 @@
     document.getElementById('popup-menu').style.display = 'block';
   });
 
-  function tutupPopup() {
-    document.getElementById('popup-menu').style.display = 'none';
-  }
+function tampilPopup() {
+  const popup = document.getElementById('popup-menu');
+  popup.style.display = 'block';
+  popup.classList.remove('closing');
+}
+
+function tutupPopup() {
+  const popup = document.getElementById('popup-menu');
+  popup.classList.add('closing');
+  setTimeout(() => {
+    popup.style.display = 'none';
+    popup.classList.remove('closing');
+  }, 300); // sesuai durasi animasi
+}
+
 
   function ambilFoto() {
-    alert('Fitur ambil foto belum tersedia.');
+    showAlert('Fitur ambil foto belum tersedia.');
     tutupPopup();
   }
 
@@ -260,8 +359,19 @@
   }
 
   function pakaiAvatar() {
-    alert('Fitur ambil foto belum tersedia.');
+    showAlert('Fitur ambil foto belum tersedia.');
     tutupPopup();
+  }
+</script>
+
+  <script>
+  function showAlert(pesan) {
+    document.getElementById('alert-message').innerText = pesan;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
   }
 </script>
   

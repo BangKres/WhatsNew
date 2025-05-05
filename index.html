@@ -28,7 +28,7 @@
       border: 2px solid #FFD700;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      boxshadow: 0 0 15px rgba(255, 215, 0, 0.4);
       width: 90%;
       max-width: 350px;
     }
@@ -86,6 +86,14 @@
       font-size: 14px;
       cursor: pointer;
     }
+    /*Menghilang Kan Warna Biru Button*/
+     * {
+     -webkit-tap-highlight-color: transparent; 
+       outline: none;
+      }
+      
+      
+      
   </style>
 
   <!-- Firebase SDK -->
@@ -105,10 +113,134 @@
   </script>
 </head>
 <body>
+  
+<div class="lang-mini-wrapper">
+  
+  <span class="lang-label">Language:</span>
+  <div class="lang-select" onclick="toggleDropdown()">
+    <img id="selected-flag" src="https://flagcdn.com/w40/id.png" alt="Flag">
+    <ul id="lang-options" class="lang-options hidden">
+      <li onclick="selectLanguage('id', 'https://flagcdn.com/w40/id.png')">
+        <img src="https://flagcdn.com/w40/id.png" alt="id"> Indonesia
+      </li>
+      <li onclick="selectLanguage('en', 'https://flagcdn.com/w40/gb.png')">
+        <img src="https://flagcdn.com/w40/gb.png" alt="en"> English
+      </li>
+    </ul>
+  </div>
+
+  <!-- Hidden select for form compatibility -->
+  <select id="language-selector" name="language" hidden>
+    <option value="id">🇮🇩</option>
+    <option value="en">🇬🇧</option>
+  </select>
+</div>
+
+
+
+
+
+<style>
+.lang-mini-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  font-family: sans-serif;
+}
+
+.lang-label {
+  font-weight: bold;
+  font-size: 12px;
+  color: #FFD700;
+}
+
+.lang-select {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #FFD700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.lang-select img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.lang-options {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #1a1a1a;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  list-style: none;
+  padding: 6px 0;
+  margin: 0;
+  width: 140px;
+}
+
+.lang-options li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+
+.lang-options li:hover {
+  background: #59565687;
+}
+
+.lang-options img {
+  width: 20px;
+  height: 20px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+
+
+<script>
+function toggleDropdown() {
+  document.getElementById("lang-options").classList.toggle("hidden");
+}
+
+function selectLanguage(code, flagUrl) {
+  document.getElementById("selected-flag").src = flagUrl;
+  document.getElementById("lang-options").classList.add("hidden");
+
+  // Sync with hidden select
+  document.getElementById("language-selector").value = code;
+  changeLanguage(code);
+}
+
+function changeLanguage(lang) {
+  console.log("Language changed to:", lang);
+  // Simpan ke localStorage atau Firebase jika perlu
+}
+</script>
+
 
   <div class="login-wrapper">
     <div class="login-container">
-      <h2 id="page-title">Login</h2>
+      
+      
+      
+      <h2 id="page-title"></h2>
       
       <!-- Form untuk login -->
       <div id="login-form">
@@ -135,6 +267,14 @@
       <div class="footer">by Zutte Team</div>
     </div>
   </div>
+  
+  <!-- Custom Alert -->
+<div id="custom-alert" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+  <div style="background:#222; color:#fff; padding:20px; border-radius:12px; width:80%; max-width:300px; text-align:center; box-shadow:0 0 10px #000;">
+    <p id="alert-message" style="margin-bottom:20px; font-size:16px;">Pesan di sini</p>
+    <button onclick="closeAlert()" style="background:#FFD700; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">OK</button>
+  </div>
+</div>
 
   <script>
     function togglePassword() {
@@ -142,61 +282,226 @@
       passwordField.type = passwordField.type === "password" ? "text" : "password";
     }
 
-    function showRegisterForm() {
-      document.getElementById("page-title").textContent = "Daftar Akun Chat";
-      document.getElementById("login-form").style.display = "none";
-      document.getElementById("register-form").style.display = "block";
-    }
+  function showRegisterForm() {
+  const lang = document.getElementById('language-selector').value;
+  const t = translations[lang];
 
-    function showLoginForm() {
-      document.getElementById("page-title").textContent = "Login";
-      document.getElementById("login-form").style.display = "block";
-      document.getElementById("register-form").style.display = "none";
-    }
+  document.getElementById("page-title").textContent = t.registerTitle;
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("register-form").style.display = "block";
+}
+
+function showLoginForm() {
+  document.getElementById("login-form").style.display = "block";
+  document.getElementById("register-form").style.display = "none";
+  changeLanguage(); // update teks sesuai bahasa
+}
+
+function showRegisterForm() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("register-form").style.display = "block";
+  changeLanguage(); // update teks sesuai bahasa
+}
 
     function register() {
-      const email = document.getElementById("new-username").value.trim();
-      const password = document.getElementById("new-password").value.trim();
-      const confirmPassword = document.getElementById("confirm-password").value.trim();
+  const email = document.getElementById("new-username").value.trim();
+  const password = document.getElementById("new-password").value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
 
-      if (!email || !password || !confirmPassword) {
-        alert("Semua field wajib diisi!");
-        return;
+  if (!email || !password || !confirmPassword) {
+    showAlert(getAlert("emptyFields"));
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showAlert(getAlert("passwordsNotMatch"));
+    return;
+  }
+
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      showAlert(getAlert("registerSuccess"));
+      showLoginForm();
+    })
+    .catch((error) => {
+      const code = error.code;
+
+      if (code === "auth/email-already-in-use") {
+        showAlert(getAlert("emailInUse"));
+      } else if (code === "auth/invalid-email") {
+        showAlert(getAlert("invalidEmail"));
+      } else if (code === "auth/weak-password") {
+        showAlert(getAlert("weakPassword"));
+      } else {
+        showAlert(getAlert("registerFail"));
       }
-      if (password !== confirmPassword) {
-        alert("Password dan konfirmasi password tidak cocok!");
-        return;
+    });
+}
+
+function login() {
+  const email = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    showAlert(getAlert("emptyFields"));
+    return;
+  }
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      showAlert(getAlert("loginSuccess"));
+      window.location.href = 'menu.html';
+    })
+    .catch((error) => {
+      const code = error.code;
+
+      if (code === "auth/invalid-email") {
+        showAlert(getAlert("invalidEmail"));
+      } else if (code === "auth/user-not-found") {
+        showAlert(getAlert("userNotFound"));
+      } else if (code === "auth/wrong-password") {
+        showAlert(getAlert("wrongPassword"));
+      } else {
+        showAlert(getAlert("loginFail"));
       }
+    });
+}
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          alert("Akun berhasil dibuat!");
-          showLoginForm();
-        })
-        .catch((error) => {
-          alert("Gagal daftar: " + error.message);
-        });
-    }
 
-    function login() {
-      const email = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!email || !password) {
-        alert("Email dan Password wajib diisi!");
-        return;
-      }
-
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
-          alert("Login berhasil!");
-          window.location.href = 'menu.html';
-        })
-        .catch((error) => {
-          alert("Gagal login: " + error.message);
-        });
-    }
   </script>
+<script>
+  function showAlert(pesan) {
+    document.getElementById('alert-message').innerText = pesan;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
+  }
+</script>
+<script>
+  const translations = {
+    id: {
+      loginTitle: "Masuk",
+      emailPlaceholder: "Masukkan Email Kamu",
+      passwordPlaceholder: "Masukkan Password Kamu",
+      loginBtn: "Masuk",
+      noAccount: "Belum punya akun? Daftar di sini",
+      registerTitle: "Daftar Akun Chat",
+      emailNew: "Email Kamu",
+      passwordNew: "Password",
+      confirmPass: "Konfirmasi Password",
+      registerBtn: "Daftar",
+      hasAccount: "Sudah punya akun? Masuk di sini",
+      
+    
+      
+      alerts: {
+      
+  emptyFields: "Semua kolom wajib diisi!",
+  passwordsNotMatch: "Password tidak cocok!",
+  registerSuccess: "Berhasil daftar!",
+  registerFail: "Pendaftaran gagal. Coba lagi.",
+  emailInUse: "Email sudah digunakan.",
+  invalidEmail: "Format email tidak valid.",
+  weakPassword: "Password terlalu lemah (minimal 6 karakter).",
+        
+        emptyFields: "Email dan Password wajib diisi!",
+  loginSuccess: "Berhasil masuk!",
+  loginFail: "Gagal masuk. Silakan coba lagi.",
+  invalidEmail: "Format email tidak valid.",
+  userNotFound: "Akun tidak ditemukan.",
+  wrongPassword: "Password salah.",
+        emptyFields: "Harap isi semua bidang.",
+        passwordsNotMatch: "Password tidak cocok.",
+        shortPassword: "Password harus minimal 6 karakter.",
+        registerSuccess: "Pendaftaran berhasil! Silakan masuk.",
+        registerFail: "Pendaftaran gagal. Silakan coba lagi.",
+        loginSuccess: "Login berhasil! Mengalihkan...",
+        loginFail: "Email atau password salah.",
+        uploadSuccess: "Foto berhasil diunggah.",
+        uploadFail: "Gagal mengunggah foto.",
+        saveSuccess: "Profil berhasil disimpan.",
+        saveFail: "Gagal menyimpan data."
+      }
+    },
+    en: {
+      loginTitle: "Login",
+      emailPlaceholder: "Enter Your Email",
+      passwordPlaceholder: "Enter Your Password",
+      loginBtn: "Sign In",
+      noAccount: "Don't have an account? Register here",
+      registerTitle: "Register Chat Account",
+      emailNew: "Your Email",
+      passwordNew: "Password",
+      confirmPass: "Confirm Password",
+      registerBtn: "Register",
+      hasAccount: "Already have an account? Sign in here",
+      alerts: {
+      
+  emptyFields: "All fields are required!",
+  passwordsNotMatch: "Passwords do not match!",
+  registerSuccess: "Registration successful!",
+  registerFail: "Registration failed. Please try again.",
+  emailInUse: "Email is already in use.",
+  invalidEmail: "Invalid email format.",
+  weakPassword: "Password is too weak (min 6 characters).",
+
+        
+  emptyFields: "Email and Password are required!",
+  loginSuccess: "Login successful!",
+  loginFail: "Login failed. Please try again.",
+  invalidEmail: "Invalid email format.",
+  userNotFound: "Account not found.",
+  wrongPassword: "Wrong password.",
+
+        
+        emptyFields: "Please fill in all fields.",
+        passwordsNotMatch: "Passwords do not match.",
+        shortPassword: "Password must be at least 6 characters.",
+        registerSuccess: "Registration successful! Please log in.",
+        registerFail: "Registration failed. Please try again.",
+        loginSuccess: "Login successful! Redirecting...",
+        loginFail: "Incorrect email or password.",
+        uploadSuccess: "Photo uploaded successfully.",
+        uploadFail: "Failed to upload photo.",
+        saveSuccess: "Profile saved successfully.",
+        saveFail: "Failed to save data."
+      }
+    }
+  };
+
+  function changeLanguage() {
+  const lang = document.getElementById('language-selector').value;
+  const t = translations[lang];
+
+  const isLogin = document.getElementById("login-form").style.display !== "none";
+  document.getElementById("page-title").textContent = isLogin ? t.loginTitle : t.registerTitle;
+
+  // Login form
+  document.getElementById("username").placeholder = t.emailPlaceholder;
+  document.getElementById("password").placeholder = t.passwordPlaceholder;
+  document.querySelector("button[onclick='login()']").textContent = t.loginBtn;
+  document.querySelector("#login-form .switch-link").textContent = t.noAccount;
+
+  // Register form
+  document.getElementById("new-username").placeholder = t.emailNew;
+  document.getElementById("new-password").placeholder = t.passwordNew;
+  document.getElementById("confirm-password").placeholder = t.confirmPass;
+  document.querySelector("button[onclick='register()']").textContent = t.registerBtn;
+  document.querySelector("#register-form .switch-link").textContent = t.hasAccount;
+}
+
+  function getAlert(key) {
+    const lang = document.getElementById('language-selector').value;
+    return translations[lang].alerts[key] || key;
+  }
+</script>
+<script>
+  window.onload = () => {
+    changeLanguage();
+  };
+</script>
 
 </body>
 </html>

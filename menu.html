@@ -197,6 +197,12 @@
     .btn:hover {
       opacity: 0.9;
     }
+    /*Menghilang Kan Warna Biru Button*/
+    * {
+    -webkit-tap-highlight-color: transparent; 
+     outline: none;
+    }
+    
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
@@ -227,6 +233,147 @@
     <div class="top-bar">
     <div class="title">ZUTTE</div>
     <div class="icons">
+  
+  
+  <!-- Logo Youtube -->
+   <svg xmlns="http://www.w3.org/2000/svg" width="45" 
+     height="45"
+     onclick="PopUpYoutube()"
+     viewBox="0 0 900 512">
+    <path fill="#ffffff" d="M549.7 124.1c-6.3-23.8-24.9-42.5-48.6-48.9C458.6 64 288 64 288 64S117.4 64 74.9 75.2C51.2 81.6 32.6 100.3 26.3 124.1 16 166.6 16 256 16 256s0 89.4 10.3 131.9c6.3 23.8 24.9 42.5 48.6 48.9C117.4 448 288 448 288 448s170.6 0 213.1-11.2c23.8-6.3 42.3-25.1 48.6-48.9 10.3-42.5 10.3-131.9 10.3-131.9s0-89.4-10.3-131.9zM232 336V176l142 80-142 80z"/>
+  </svg>
+
+<!-- Google Icon -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24" height="24"
+     viewBox="0 0 48 48"
+     onclick="handleGoogleClick()"
+     style="cursor: pointer;">
+  <path fill="#ffffff" d="M44.5 20H24v8.5h11.9C34.3 33.1 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l6-6C34.1 6.2 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.7-.5-4z"/>
+</svg>
+
+<!-- Popup Box -->
+<div id="popup" style="
+  display: none;
+  opacity: 0;
+  position: fixed;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 50px 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  width: 350px;
+  height: 550px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+">
+  <!-- Tombol X di pojok kanan atas -->
+  <span onclick="closePopup()" style="
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+  ">&times;</span>
+
+<iframe src="https://www.google.com/search?igu=1" style=
+"width: 120%;
+height:110%; 
+top: 56%;
+left: 50%;
+margin-left: -27px;
+position: center;
+text-align: center;
+overflow-x: hidden;
+border:none;">
+</iframe>
+</div>
+
+<script>
+  function handleGoogleClick() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "block";
+    setTimeout(() => popup.style.opacity = "1", 50);
+  }
+
+  function closePopup() {
+    const popup = document.getElementById("popup");
+    popup.style.opacity = "0";
+    setTimeout(() => popup.style.display = "none", 400);
+  }
+</script>
+
+<!-- Popup Box -->
+<div id="popupYoutube" style="
+  display: none;
+  opacity: 0;
+  position: fixed;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 50px 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  width: 350px;
+  height: 550px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+">
+  <!-- Tombol X di pojok kanan atas -->
+  <span onclick="closePopupYoutube()" style="
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+  ">&times;</span>
+
+
+
+<iframe src="https://www.youtube.com/embed/8-V7uZedrAc" style=
+"width: 120%;
+height:110%; 
+top: 56%;
+left: 50%;
+margin-left: -27px;
+position: center;
+text-align: center;
+overflow-x: hidden;
+border:none;">
+</iframe>
+</div>
+
+<script>
+  function PopUpYoutube() {
+    const popup = document.getElementById("popupYoutube");
+    popup.style.display = "block";
+    setTimeout(() => popup.style.opacity = "1", 50);
+  }
+
+  function closePopupYoutube() {
+    const popup = document.getElementById("popupYoutube");
+    popup.style.opacity = "0";
+    setTimeout(() => popup.style.display = "none", 400);
+  }
+</script>
+
+
+
+
+
+
+
+
+  
     <i   class="fa fa-camera"></i>
     <i   class="fa fa-search"></i>
     <i   class="fa fa-ellipsis-v" onclick="toggleMenu()"></i>
@@ -284,6 +431,14 @@
    </div>
    </div>
 
+  <!-- Custom Alert -->
+<div id="custom-alert" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+  <div style="background:#222; color:#fff; padding:20px; border-radius:12px; width:80%; max-width:300px; text-align:center; box-shadow:0 0 10px #000;">
+    <p id="alert-message" style="margin-bottom:20px; font-size:16px;">Pesan di sini</p>
+    <button onclick="closeAlert()" style="background:#FFD700; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">OK</button>
+  </div>
+</div>
+
   <script>
     const clickSound = document.getElementById("clickSound");
     // Tombol filter
@@ -327,6 +482,16 @@
 </script>
 
 
+<script>
+  function showAlert(pesan) {
+    document.getElementById('alert-message').innerText = pesan;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
+  }
+</script>
 
 
 </body>
